@@ -1,1 +1,1 @@
-# generative-ai-essentials
+# Generative AI Essentials
