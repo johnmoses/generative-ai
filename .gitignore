@@ -1,1 +1,5 @@
 .pth
+wandb/
+output/
+custom_sql/
+model/
