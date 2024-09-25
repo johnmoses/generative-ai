@@ -1,5 +1,10 @@
 .pth
-wandb/
-output/
-custom_sql/
 model/
+model-peft/
+training/
+training-peft/
+wandb/
+backup/*
+.env
+.pt
+/.ipynb_checkpoints
