@@ -1,0 +1,2358 @@
+[Q] How many heads of the departments are older than 56 ?
+[A] SELECT COUNT(*) FROM head WHERE age > 56
+
+[Q] List the name, born state and age of the heads of departments ordered by age.
+[A] SELECT name, born_state, age FROM head ORDER BY age
+
+[Q] List the creation year, name and budget of each department.
+[A] SELECT creation, name, budget_in_billions FROM department
+
+[Q] What are the maximum and minimum budget of the departments?
+[A] SELECT MAX(budget_in_billions), MIN(budget_in_billions) FROM department
+
+[Q] What is the average number of employees of the departments whose rank is between 10 and 15?
+[A] SELECT AVG(num_employees) FROM department WHERE ranking BETWEEN 10 AND 15
+
+[Q] What are the names of the heads who are born outside the California state?
+[A] SELECT name FROM head WHERE born_state <> 'California'
+
+[Q] What are the distinct creation years of the departments managed by a secretary born in state 'Alabama'?
+[A] SELECT DISTINCT T1.creation FROM department AS T1 JOIN management AS T2 ON T1.department_id = T2.department_id JOIN head AS T3 ON T2.head_id = T3.head_id WHERE T3.born_state = 'Alabama'
+
+[Q] What are the names of the states where at least 3 heads were born?
+[A] SELECT born_state FROM head GROUP BY born_state HAVING COUNT(*) >= 3
+
+[Q] In which year were most departments established?
+[A] SELECT creation FROM department GROUP BY creation ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Show the name and number of employees for the departments managed by heads whose temporary acting value is 'Yes'?
+[A] SELECT T1.name, T1.num_employees FROM department AS T1 JOIN management AS T2 ON T1.department_id = T2.department_id WHERE T2.temporary_acting = 'Yes'
+
+[Q] How many acting statuses are there?
+[A] SELECT COUNT(DISTINCT temporary_acting) FROM management
+
+[Q] How many departments are led by heads who are not mentioned?
+[A] SELECT COUNT(*) FROM department WHERE NOT department_id IN (SELECT department_id FROM management)
+
+[Q] What are the distinct ages of the heads who are acting?
+[A] SELECT DISTINCT T1.age FROM management AS T2 JOIN head AS T1 ON T1.head_id = T2.head_id WHERE T2.temporary_acting = 'Yes'
+
+[Q] List the states where both the secretary of 'Treasury' department and the secretary of 'Homeland Security' were born.
+[A] SELECT T3.born_state FROM department AS T1 JOIN management AS T2 ON T1.department_id = T2.department_id JOIN head AS T3 ON T2.head_id = T3.head_id WHERE T1.name = 'Treasury' INTERSECT SELECT T3.born_state FROM department AS T1 JOIN management AS T2 ON T1.department_id = T2.department_id JOIN head AS T3 ON T2.head_id = T3.head_id WHERE T1.name = 'Homeland Security'
+
+[Q] Which department has more than 1 head at a time? List the id, name and the number of heads.
+[A] SELECT T1.department_id, T1.name, COUNT(*) FROM management AS T2 JOIN department AS T1 ON T1.department_id = T2.department_id GROUP BY T1.department_id HAVING COUNT(*) > 1
+
+[Q] Which head's name has the substring 'Ha'? List the id and name.
+[A] SELECT head_id, name FROM head WHERE name LIKE '%Ha%'
+
+[Q] How many farms are there?
+[A] SELECT COUNT(*) FROM farm
+
+[Q] List the total number of horses on farms in ascending order.
+[A] SELECT Total_Horses FROM farm ORDER BY Total_Horses
+
+[Q] What are the hosts of competitions whose theme is not "Aliens"?
+[A] SELECT Hosts FROM farm_competition WHERE Theme <> 'Aliens'
+
+[Q] What are the themes of farm competitions sorted by year in ascending order?
+[A] SELECT Theme FROM farm_competition ORDER BY YEAR
+
+[Q] What is the average number of working horses of farms with more than 5000 total number of horses?
+[A] SELECT AVG(Working_Horses) FROM farm WHERE Total_Horses > 5000
+
+[Q] What are the maximum and minimum number of cows across all farms.
+[A] SELECT MAX(Cows), MIN(Cows) FROM farm
+
+[Q] How many different statuses do cities have?
+[A] SELECT COUNT(DISTINCT Status) FROM city
+
+[Q] List official names of cities in descending order of population.
+[A] SELECT Official_Name FROM city ORDER BY Population DESC
+
+[Q] List the official name and status of the city with the largest population.
+[A] SELECT Official_Name, Status FROM city ORDER BY Population DESC LIMIT 1
+
+[Q] Show the years and the official names of the host cities of competitions.
+[A] SELECT T2.Year, T1.Official_Name FROM city AS T1 JOIN farm_competition AS T2 ON T1.City_ID = T2.Host_city_ID
+
+[Q] Show the official names of the cities that have hosted more than one competition.
+[A] SELECT T1.Official_Name FROM city AS T1 JOIN farm_competition AS T2 ON T1.City_ID = T2.Host_city_ID GROUP BY T2.Host_city_ID HAVING COUNT(*) > 1
+
+[Q] Show the status of the city that has hosted the greatest number of competitions.
+[A] SELECT T1.Status FROM city AS T1 JOIN farm_competition AS T2 ON T1.City_ID = T2.Host_city_ID GROUP BY T2.Host_city_ID ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Please show the themes of competitions with host cities having populations larger than 1000.
+[A] SELECT T2.Theme FROM city AS T1 JOIN farm_competition AS T2 ON T1.City_ID = T2.Host_city_ID WHERE T1.Population > 1000
+
+[Q] Please show the different statuses of cities and the average population of cities with each status.
+[A] SELECT Status, AVG(Population) FROM city GROUP BY Status
+
+[Q] Please show the different statuses, ordered by the number of cities that have each.
+[A] SELECT Status FROM city GROUP BY Status ORDER BY COUNT(*)
+
+[Q] List the most common type of Status across cities.
+[A] SELECT Status FROM city GROUP BY Status ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] List the official names of cities that have not held any competition.
+[A] SELECT Official_Name FROM city WHERE NOT City_ID IN (SELECT Host_city_ID FROM farm_competition)
+
+[Q] Show the status shared by cities with population bigger than 1500 and smaller than 500.
+[A] SELECT Status FROM city WHERE Population > 1500 INTERSECT SELECT Status FROM city WHERE Population < 500
+
+[Q] Find the official names of cities with population bigger than 1500 or smaller than 500.
+[A] SELECT Official_Name FROM city WHERE Population > 1500 OR Population < 500
+
+[Q] Show the census ranking of cities whose status are not "Village".
+[A] SELECT Census_Ranking FROM city WHERE Status <> "Village"
+
+[Q] which course has most number of registered students?
+[A] SELECT T1.course_name FROM courses AS T1 JOIN student_course_registrations AS T2 ON T1.course_id = T2.course_Id GROUP BY T1.course_id ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] what is id of students who registered some courses but the least number of courses in these students?
+[A] SELECT student_id FROM student_course_registrations GROUP BY student_id ORDER BY COUNT(*) LIMIT 1
+
+[Q] what are the first name and last name of all candidates?
+[A] SELECT T2.first_name, T2.last_name FROM candidates AS T1 JOIN people AS T2 ON T1.candidate_id = T2.person_id
+
+[Q] List the id of students who never attends courses?
+[A] SELECT student_id FROM students WHERE NOT student_id IN (SELECT student_id FROM student_course_attendance)
+
+[Q] List the id of students who attended some courses?
+[A] SELECT student_id FROM student_course_attendance
+
+[Q] What are the ids of all students for courses and what are the names of those courses?
+[A] SELECT T1.student_id, T2.course_name FROM student_course_registrations AS T1 JOIN courses AS T2 ON T1.course_id = T2.course_id
+
+[Q] What is detail of the student who most recently registered course?
+[A] SELECT T2.student_details FROM student_course_registrations AS T1 JOIN students AS T2 ON T1.student_id = T2.student_id ORDER BY T1.registration_date DESC LIMIT 1
+
+[Q] How many students attend course English?
+[A] SELECT COUNT(*) FROM courses AS T1 JOIN student_course_attendance AS T2 ON T1.course_id = T2.course_id WHERE T1.course_name = "English"
+
+[Q] How many courses do the student whose id is 171 attend?
+[A] SELECT COUNT(*) FROM courses AS T1 JOIN student_course_attendance AS T2 ON T1.course_id = T2.course_id WHERE T2.student_id = 171
+
+[Q] Find id of the candidate whose email is stanley.monahan@example.org?
+[A] SELECT T2.candidate_id FROM people AS T1 JOIN candidates AS T2 ON T1.person_id = T2.candidate_id WHERE T1.email_address = "stanley.monahan@example.org"
+
+[Q] Find id of the candidate who most recently accessed the course?
+[A] SELECT candidate_id FROM candidate_assessments ORDER BY assessment_date DESC LIMIT 1
+
+[Q] What is detail of the student who registered the most number of courses?
+[A] SELECT T1.student_details FROM students AS T1 JOIN student_course_registrations AS T2 ON T1.student_id = T2.student_id GROUP BY T1.student_id ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] List the id of students who registered some courses and the number of their registered courses?
+[A] SELECT T1.student_id, COUNT(*) FROM students AS T1 JOIN student_course_registrations AS T2 ON T1.student_id = T2.student_id GROUP BY T1.student_id
+
+[Q] How many registed students do each course have? List course name and the number of their registered students?
+[A] SELECT T3.course_name, COUNT(*) FROM students AS T1 JOIN student_course_registrations AS T2 ON T1.student_id = T2.student_id JOIN courses AS T3 ON T2.course_id = T3.course_id GROUP BY T2.course_id
+
+[Q] Find id of candidates whose assessment code is "Pass"?
+[A] SELECT candidate_id FROM candidate_assessments WHERE asessment_outcome_code = "Pass"
+
+[Q] Find the cell mobile number of the candidates whose assessment code is "Fail"?
+[A] SELECT T3.cell_mobile_number FROM candidates AS T1 JOIN candidate_assessments AS T2 ON T1.candidate_id = T2.candidate_id JOIN people AS T3 ON T1.candidate_id = T3.person_id WHERE T2.asessment_outcome_code = "Fail"
+
+[Q] What are the id of students who registered course 301?
+[A] SELECT student_id FROM student_course_attendance WHERE course_id = 301
+
+[Q] What is the id of the student who most recently registered course 301?
+[A] SELECT student_id FROM student_course_attendance WHERE course_id = 301 ORDER BY date_of_attendance DESC LIMIT 1
+
+[Q] Find distinct cities of addresses of people?
+[A] SELECT DISTINCT T1.city FROM addresses AS T1 JOIN people_addresses AS T2 ON T1.address_id = T2.address_id
+
+[Q] Find distinct cities of address of students?
+[A] SELECT DISTINCT T1.city FROM addresses AS T1 JOIN people_addresses AS T2 ON T1.address_id = T2.address_id JOIN students AS T3 ON T2.person_id = T3.student_id
+
+[Q] List the names of courses in alphabetical order?
+[A] SELECT course_name FROM courses ORDER BY course_name
+
+[Q] List the first names of people in alphabetical order?
+[A] SELECT first_name FROM people ORDER BY first_name
+
+[Q] What are the id of students who registered courses or attended courses?
+[A] SELECT student_id FROM student_course_registrations UNION SELECT student_id FROM student_course_attendance
+
+[Q] Find the id of courses which are registered or attended by student whose id is 121?
+[A] SELECT course_id FROM student_course_registrations WHERE student_id = 121 UNION SELECT course_id FROM student_course_attendance WHERE student_id = 121
+
+[Q] What are all info of students who registered courses but not attended courses?
+[A] SELECT * FROM student_course_registrations WHERE NOT student_id IN (SELECT student_id FROM student_course_attendance)
+
+[Q] List the id of students who registered course statistics in the order of registration date.
+[A] SELECT T2.student_id FROM courses AS T1 JOIN student_course_registrations AS T2 ON T1.course_id = T2.course_id WHERE T1.course_name = "statistics" ORDER BY T2.registration_date
+
+[Q] List the id of students who attended  statistics courses in the order of attendance date.
+[A] SELECT T2.student_id FROM courses AS T1 JOIN student_course_attendance AS T2 ON T1.course_id = T2.course_id WHERE T1.course_name = "statistics" ORDER BY T2.date_of_attendance
+
+[Q] Give me the dates when the max temperature was higher than 85.
+[A] SELECT date FROM weather WHERE max_temperature_f > 85
+
+[Q] What are the names of stations that have latitude lower than 37.5?
+[A] SELECT name FROM station WHERE lat < 37.5
+
+[Q] For each city, return the highest latitude among its stations.
+[A] SELECT city, MAX(lat) FROM station GROUP BY city
+
+[Q] Give me the start station and end station for the trips with the three oldest id.
+[A] SELECT start_station_name, end_station_name FROM trip ORDER BY id LIMIT 3
+
+[Q] What is the average latitude and longitude of stations located in San Jose city?
+[A] SELECT AVG(lat), AVG(long) FROM station WHERE city = "San Jose"
+
+[Q] What is the id of the trip that has the shortest duration?
+[A] SELECT id FROM trip ORDER BY duration LIMIT 1
+
+[Q] What is the total and maximum duration of trips with bike id 636?
+[A] SELECT SUM(duration), MAX(duration) FROM trip WHERE bike_id = 636
+
+[Q] For each zip code, return the average mean temperature of August there.
+[A] SELECT zip_code, AVG(mean_temperature_f) FROM weather WHERE date LIKE "8/%" GROUP BY zip_code
+
+[Q] From the trip record, find the number of unique bikes.
+[A] SELECT COUNT(DISTINCT bike_id) FROM trip
+
+[Q] What is the number of distinct cities the stations are located at?
+[A] SELECT COUNT(DISTINCT city) FROM station
+
+[Q] How many stations does Mountain View city has?
+[A] SELECT COUNT(*) FROM station WHERE city = "Mountain View"
+
+[Q] Return the unique name for stations that have ever had 7 bikes available.
+[A] SELECT DISTINCT T1.name FROM station AS T1 JOIN status AS T2 ON T1.id = T2.station_id WHERE T2.bikes_available = 7
+
+[Q] Which start station had the most trips starting from August? Give me the name and id of the station.
+[A] SELECT start_station_name, start_station_id FROM trip WHERE start_date LIKE "8/%" GROUP BY start_station_name ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Which bike traveled the most often in zip code 94002?
+[A] SELECT bike_id FROM trip WHERE zip_code = 94002 GROUP BY bike_id ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] How many days had both mean humidity above 50 and mean visibility above 8?
+[A] SELECT COUNT(*) FROM weather WHERE mean_humidity > 50 AND mean_visibility_miles > 8
+
+[Q] What is the latitude, longitude, city of the station from which the shortest trip started?
+[A] SELECT T1.lat, T1.long, T1.city FROM station AS T1 JOIN trip AS T2 ON T1.id = T2.start_station_id ORDER BY T2.duration LIMIT 1
+
+[Q] What are the ids of stations that are located in San Francisco and have average bike availability above 10.
+[A] SELECT id FROM station WHERE city = "San Francisco" INTERSECT SELECT station_id FROM status GROUP BY station_id HAVING AVG(bikes_available) > 10
+
+[Q] What are the names and ids of stations that had more than 14 bikes available on average or were installed in December?
+[A] SELECT T1.name, T1.id FROM station AS T1 JOIN status AS T2 ON T1.id = T2.station_id GROUP BY T2.station_id HAVING AVG(T2.bikes_available) > 14 UNION SELECT name, id FROM station WHERE installation_date LIKE "12/%"
+
+[Q] What is the 3 most common cloud cover rates in the region of zip code 94107?
+[A] SELECT cloud_cover FROM weather WHERE zip_code = 94107 GROUP BY cloud_cover ORDER BY COUNT(*) DESC LIMIT 3
+
+[Q] What is the zip code in which the average mean sea level pressure is the lowest?
+[A] SELECT zip_code FROM weather GROUP BY zip_code ORDER BY AVG(mean_sea_level_pressure_inches) LIMIT 1
+
+[Q] What is the average bike availability in stations that are not located in Palo Alto?
+[A] SELECT AVG(bikes_available) FROM status WHERE NOT station_id IN (SELECT id FROM station WHERE city = "Palo Alto")
+
+[Q] What is the average longitude of stations that never had bike availability more than 10?
+[A] SELECT AVG(long) FROM station WHERE NOT id IN (SELECT station_id FROM status GROUP BY station_id HAVING MAX(bikes_available) > 10)
+
+[Q] When and in what zip code did max temperature reach 80?
+[A] SELECT date, zip_code FROM weather WHERE max_temperature_f >= 80
+
+[Q] Give me ids for all the trip that took place in a zip code area with average mean temperature above 60.
+[A] SELECT T1.id FROM trip AS T1 JOIN weather AS T2 ON T1.zip_code = T2.zip_code GROUP BY T2.zip_code HAVING AVG(T2.mean_temperature_f) > 60
+
+[Q] For each zip code, return how many times max wind speed reached 25?
+[A] SELECT zip_code, COUNT(*) FROM weather WHERE max_wind_Speed_mph >= 25 GROUP BY zip_code
+
+[Q] On which day and in which zip code was the min dew point lower than any day in zip code 94107?
+[A] SELECT date, zip_code FROM weather WHERE min_dew_point_f < (SELECT MIN(min_dew_point_f) FROM weather WHERE zip_code = 94107)
+
+[Q] For each trip, return its ending station's installation date.
+[A] SELECT T1.id, T2.installation_date FROM trip AS T1 JOIN station AS T2 ON T1.end_station_id = T2.id
+
+[Q] Which trip started from the station with the largest dock count? Give me the trip id.
+[A] SELECT T1.id FROM trip AS T1 JOIN station AS T2 ON T1.start_station_id = T2.id ORDER BY T2.dock_count DESC LIMIT 1
+
+[Q] Count the number of trips that did not end in San Francisco city.
+[A] SELECT COUNT(*) FROM trip AS T1 JOIN station AS T2 ON T1.end_station_id = T2.id WHERE T2.city <> "San Francisco"
+
+[Q] In zip code 94107, on which day neither Fog nor Rain was not observed?
+[A] SELECT date FROM weather WHERE zip_code = 94107 AND EVENTS <> "Fog" AND EVENTS <> "Rain"
+
+[Q] What are the ids of stations that have latitude above 37.4 and never had bike availability below 7?
+[A] SELECT id FROM station WHERE lat > 37.4 EXCEPT SELECT station_id FROM status GROUP BY station_id HAVING MIN(bikes_available) < 7
+
+[Q] What are names of stations that have average bike availability above 10 and are not located in San Jose city?
+[A] SELECT T1.name FROM station AS T1 JOIN status AS T2 ON T1.id = T2.station_id GROUP BY T2.station_id HAVING AVG(bikes_available) > 10 EXCEPT SELECT name FROM station WHERE city = "San Jose"
+
+[Q] What are the name, latitude, and city of the station with the lowest latitude?
+[A] SELECT name, lat, city FROM station ORDER BY lat LIMIT 1
+
+[Q] What are the date, mean temperature and mean humidity for the top 3 days with the largest max gust speeds?
+[A] SELECT date, mean_temperature_f, mean_humidity FROM weather ORDER BY max_gust_speed_mph DESC LIMIT 3
+
+[Q] List the name and the number of stations for all the cities that have at least 15 stations.
+[A] SELECT city, COUNT(*) FROM station GROUP BY city HAVING COUNT(*) >= 15
+
+[Q] Find the ids and names of stations from which at least 200 trips started.
+[A] SELECT start_station_id, start_station_name FROM trip GROUP BY start_station_name HAVING COUNT(*) >= 200
+
+[Q] Find the zip code in which the average mean visibility is lower than 10.
+[A] SELECT zip_code FROM weather GROUP BY zip_code HAVING AVG(mean_visibility_miles) < 10
+
+[Q] List all the cities in a decreasing order of each city's stations' highest latitude.
+[A] SELECT city FROM station GROUP BY city ORDER BY MAX(lat) DESC
+
+[Q] What are the dates that had the top 5 cloud cover rates? Also tell me the cloud cover rate.
+[A] SELECT date, cloud_cover FROM weather ORDER BY cloud_cover DESC LIMIT 5
+
+[Q] What are the ids and durations of the trips with the top 3 durations?
+[A] SELECT id, duration FROM trip ORDER BY duration DESC LIMIT 3
+
+[Q] For each station, return its longitude and the average duration of trips that started from the station.
+[A] SELECT T1.name, T1.long, AVG(T2.duration) FROM station AS T1 JOIN trip AS T2 ON T1.id = T2.start_station_id GROUP BY T2.start_station_id
+
+[Q] For each station, find its latitude and the minimum duration of trips that ended at the station.
+[A] SELECT T1.name, T1.lat, MIN(T2.duration) FROM station AS T1 JOIN trip AS T2 ON T1.id = T2.end_station_id GROUP BY T2.end_station_id
+
+[Q] List all the distinct stations from which a trip of duration below 100 started.
+[A] SELECT DISTINCT start_station_name FROM trip WHERE duration < 100
+
+[Q] Find all the zip codes in which the max dew point have never reached 70.
+[A] SELECT DISTINCT zip_code FROM weather EXCEPT SELECT DISTINCT zip_code FROM weather WHERE max_dew_point_f >= 70
+
+[Q] Find the id for the trips that lasted at least as long as the average duration of trips in zip code 94103.
+[A] SELECT id FROM trip WHERE duration >= (SELECT AVG(duration) FROM trip WHERE zip_code = 94103)
+
+[Q] What are the dates in which the mean sea level pressure was between 30.3 and 31?
+[A] SELECT date FROM weather WHERE mean_sea_level_pressure_inches BETWEEN 30.3 AND 31
+
+[Q] Find the day in which the difference between the max temperature and min temperature was the smallest. Also report the difference.
+[A] SELECT date, max_temperature_f - min_temperature_f FROM weather ORDER BY max_temperature_f - min_temperature_f LIMIT 1
+
+[Q] What are the id and name of the stations that have ever had more than 12 bikes available?
+[A] SELECT DISTINCT T1.id, T1.name FROM station AS T1 JOIN status AS T2 ON T1.id = T2.station_id WHERE T2.bikes_available > 12
+
+[Q] Give me the zip code where the average mean humidity is below 70 and at least 100 trips took place.
+[A] SELECT zip_code FROM weather GROUP BY zip_code HAVING AVG(mean_humidity) < 70 INTERSECT SELECT zip_code FROM trip GROUP BY zip_code HAVING COUNT(*) >= 100
+
+[Q] What are the names of stations that are located in Palo Alto city but have never been the ending point of trips more than 100 times?
+[A] SELECT name FROM station WHERE city = "Palo Alto" EXCEPT SELECT end_station_name FROM trip GROUP BY end_station_name HAVING COUNT(*) > 100
+
+[Q] How many trips started from Mountain View city and ended at Palo Alto city?
+[A] SELECT COUNT(*) FROM station AS T1 JOIN trip AS T2 JOIN station AS T3 JOIN trip AS T4 ON T1.id = T2.start_station_id AND T2.id = T4.id AND T3.id = T4.end_station_id WHERE T1.city = "Mountain View" AND T3.city = "Palo Alto"
+
+[Q] What is the average latitude and longitude of the starting points of all trips?
+[A] SELECT AVG(T1.lat), AVG(T1.long) FROM station AS T1 JOIN trip AS T2 ON T1.id = T2.start_station_id
+
+[Q] How many books are there?
+[A] SELECT COUNT(*) FROM book
+
+[Q] List the writers of the books in ascending alphabetical order.
+[A] SELECT Writer FROM book ORDER BY Writer
+
+[Q] List the titles of the books in ascending order of issues.
+[A] SELECT Title FROM book ORDER BY Issues
+
+[Q] What are the titles of the books whose writer is not "Elaine Lee"?
+[A] SELECT Title FROM book WHERE Writer <> "Elaine Lee"
+
+[Q] What are the title and issues of the books?
+[A] SELECT Title, Issues FROM book
+
+[Q] What are the dates of publications in descending order of price?
+[A] SELECT Publication_Date FROM publication ORDER BY Price DESC
+
+[Q] What are the distinct publishers of publications with price higher than 5000000?
+[A] SELECT DISTINCT Publisher FROM publication WHERE Price > 5000000
+
+[Q] List the publisher of the publication with the highest price.
+[A] SELECT Publisher FROM publication ORDER BY Price DESC LIMIT 1
+
+[Q] List the publication dates of publications with 3 lowest prices.
+[A] SELECT Publication_Date FROM publication ORDER BY Price LIMIT 3
+
+[Q] Show the title and publication dates of books.
+[A] SELECT T1.Title, T2.Publication_Date FROM book AS T1 JOIN publication AS T2 ON T1.Book_ID = T2.Book_ID
+
+[Q] Show writers who have published a book with price more than 4000000.
+[A] SELECT T1.Writer FROM book AS T1 JOIN publication AS T2 ON T1.Book_ID = T2.Book_ID WHERE T2.Price > 4000000
+
+[Q] Show the titles of books in descending order of publication price.
+[A] SELECT T1.Title FROM book AS T1 JOIN publication AS T2 ON T1.Book_ID = T2.Book_ID ORDER BY T2.Price DESC
+
+[Q] Show publishers that have more than one publication.
+[A] SELECT Publisher FROM publication GROUP BY Publisher HAVING COUNT(*) > 1
+
+[Q] Show different publishers together with the number of publications they have.
+[A] SELECT Publisher, COUNT(*) FROM publication GROUP BY Publisher
+
+[Q] Please show the most common publication date.
+[A] SELECT Publication_Date FROM publication GROUP BY Publication_Date ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] List the writers who have written more than one book.
+[A] SELECT Writer FROM book GROUP BY Writer HAVING COUNT(*) > 1
+
+[Q] List the titles of books that are not published.
+[A] SELECT Title FROM book WHERE NOT Book_ID IN (SELECT Book_ID FROM publication)
+
+[Q] Show the publishers that have publications with price higher than 10000000 and publications with price lower than 5000000.
+[A] SELECT Publisher FROM publication WHERE Price > 10000000 INTERSECT SELECT Publisher FROM publication WHERE Price < 5000000
+
+[Q] What is the number of distinct publication dates?
+[A] SELECT COUNT(DISTINCT Publication_Date) FROM publication
+
+[Q] Show the prices of publications whose publisher is either "Person" or "Wiley"
+[A] SELECT Price FROM publication WHERE Publisher = "Person" OR Publisher = "Wiley"
+
+[Q] How many actors are there?
+[A] SELECT COUNT(*) FROM actor
+
+[Q] List the name of actors in ascending alphabetical order.
+[A] SELECT Name FROM actor ORDER BY Name
+
+[Q] What are the characters and duration of actors?
+[A] SELECT Character, Duration FROM actor
+
+[Q] List the name of actors whose age is not 20.
+[A] SELECT Name FROM actor WHERE Age <> 20
+
+[Q] What are the characters of actors in descending order of age?
+[A] SELECT Character FROM actor ORDER BY age DESC
+
+[Q] What is the duration of the oldest actor?
+[A] SELECT Duration FROM actor ORDER BY Age DESC LIMIT 1
+
+[Q] What are the names of musicals with nominee "Bob Fosse"?
+[A] SELECT Name FROM musical WHERE Nominee = "Bob Fosse"
+
+[Q] What are the distinct nominees of the musicals with the award that is not "Tony Award"?
+[A] SELECT DISTINCT Nominee FROM musical WHERE Award <> "Tony Award"
+
+[Q] Show names of actors and names of musicals they are in.
+[A] SELECT T1.Name, T2.Name FROM actor AS T1 JOIN musical AS T2 ON T1.Musical_ID = T2.Musical_ID
+
+[Q] Show names of actors that have appeared in musical with name "The Phantom of the Opera".
+[A] SELECT T1.Name FROM actor AS T1 JOIN musical AS T2 ON T1.Musical_ID = T2.Musical_ID WHERE T2.Name = "The Phantom of the Opera"
+
+[Q] Show names of actors in descending order of the year their musical is awarded.
+[A] SELECT T1.Name FROM actor AS T1 JOIN musical AS T2 ON T1.Musical_ID = T2.Musical_ID ORDER BY T2.Year DESC
+
+[Q] Show names of musicals and the number of actors who have appeared in the musicals.
+[A] SELECT T2.Name, COUNT(*) FROM actor AS T1 JOIN musical AS T2 ON T1.Musical_ID = T2.Musical_ID GROUP BY T1.Musical_ID
+
+[Q] Show names of musicals which have at least three actors.
+[A] SELECT T2.Name FROM actor AS T1 JOIN musical AS T2 ON T1.Musical_ID = T2.Musical_ID GROUP BY T1.Musical_ID HAVING COUNT(*) >= 3
+
+[Q] Show different nominees and the number of musicals they have been nominated.
+[A] SELECT Nominee, COUNT(*) FROM musical GROUP BY Nominee
+
+[Q] Please show the nominee who has been nominated the greatest number of times.
+[A] SELECT Nominee FROM musical GROUP BY Nominee ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] List the most common result of the musicals.
+[A] SELECT RESULT FROM musical GROUP BY RESULT ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] List the nominees that have been nominated more than two musicals.
+[A] SELECT Nominee FROM musical GROUP BY Nominee HAVING COUNT(*) > 2
+
+[Q] List the name of musicals that do not have actors.
+[A] SELECT Name FROM musical WHERE NOT Musical_ID IN (SELECT Musical_ID FROM actor)
+
+[Q] Show the nominees that have nominated musicals for both "Tony Award" and "Drama Desk Award".
+[A] SELECT Nominee FROM musical WHERE Award = "Tony Award" INTERSECT SELECT Nominee FROM musical WHERE Award = "Drama Desk Award"
+
+[Q] Show the musical nominee with award "Bob Fosse" or "Cleavant Derricks".
+[A] SELECT Nominee FROM musical WHERE Award = "Tony Award" OR Award = "Cleavant Derricks"
+
+[Q] Find the emails of the user named "Mary".
+[A] SELECT email FROM user_profiles WHERE name = 'Mary'
+
+[Q] What is the partition id of the user named "Iron Man".
+[A] SELECT partitionid FROM user_profiles WHERE name = 'Iron Man'
+
+[Q] How many users are there?
+[A] SELECT COUNT(*) FROM user_profiles
+
+[Q] How many followers does each user have?
+[A] SELECT COUNT(*) FROM follows
+
+[Q] Find the number of followers for each user.
+[A] SELECT COUNT(*) FROM follows GROUP BY f1
+
+[Q] Find the number of tweets in record.
+[A] SELECT COUNT(*) FROM tweets
+
+[Q] Find the number of users who posted some tweets.
+[A] SELECT COUNT(DISTINCT UID) FROM tweets
+
+[Q] Find the name and email of the user whose name contains the word ‘Swift’.
+[A] SELECT name, email FROM user_profiles WHERE name LIKE '%Swift%'
+
+[Q] Find the names of users whose emails contain ‘superstar’ or ‘edu’.
+[A] SELECT name FROM user_profiles WHERE email LIKE '%superstar%' OR email LIKE '%edu%'
+
+[Q] Return the text of tweets about the topic 'intern'.
+[A] SELECT text FROM tweets WHERE text LIKE '%intern%'
+
+[Q] Find the name and email of the users who have more than 1000 followers.
+[A] SELECT name, email FROM user_profiles WHERE followers > 1000
+
+[Q] Find the names of the users whose number of followers is greater than that of the user named "Tyler Swift".
+[A] SELECT T1.name FROM user_profiles AS T1 JOIN follows AS T2 ON T1.uid = T2.f1 GROUP BY T2.f1 HAVING COUNT(*) > (SELECT COUNT(*) FROM user_profiles AS T1 JOIN follows AS T2 ON T1.uid = T2.f1 WHERE T1.name = 'Tyler Swift')
+
+[Q] Find the name and email for the users who have more than one follower.
+[A] SELECT T1.name, T1.email FROM user_profiles AS T1 JOIN follows AS T2 ON T1.uid = T2.f1 GROUP BY T2.f1 HAVING COUNT(*) > 1
+
+[Q] Find the names of users who have more than one tweet.
+[A] SELECT T1.name FROM user_profiles AS T1 JOIN tweets AS T2 ON T1.uid = T2.uid GROUP BY T2.uid HAVING COUNT(*) > 1
+
+[Q] Find the id of users who are followed by Mary and Susan.
+[A] SELECT T2.f1 FROM user_profiles AS T1 JOIN follows AS T2 ON T1.uid = T2.f2 WHERE T1.name = "Mary" INTERSECT SELECT T2.f1 FROM user_profiles AS T1 JOIN follows AS T2 ON T1.uid = T2.f2 WHERE T1.name = "Susan"
+
+[Q] Find the id of users who are followed by Mary or Susan.
+[A] SELECT T2.f1 FROM user_profiles AS T1 JOIN follows AS T2 ON T1.uid = T2.f2 WHERE T1.name = "Mary" OR T1.name = "Susan"
+
+[Q] Find the name of the user who has the largest number of followers.
+[A] SELECT name FROM user_profiles ORDER BY followers DESC LIMIT 1
+
+[Q] Find the name and email of the user followed by the least number of people.
+[A] SELECT name, email FROM user_profiles ORDER BY followers LIMIT 1
+
+[Q] List the name and number of followers for each user, and sort the results by the number of followers in descending order.
+[A] SELECT name, followers FROM user_profiles ORDER BY followers DESC
+
+[Q] List the names of 5 users followed by the largest number of other users.
+[A] SELECT name FROM user_profiles ORDER BY followers DESC LIMIT 5
+
+[Q] List the text of all tweets in the order of date.
+[A] SELECT text FROM tweets ORDER BY createdate
+
+[Q] Find the name of each user and number of tweets tweeted by each of them.
+[A] SELECT T1.name, COUNT(*) FROM user_profiles AS T1 JOIN tweets AS T2 ON T1.uid = T2.uid GROUP BY T2.uid
+
+[Q] Find the name and partition id for users who tweeted less than twice.
+[A] SELECT T1.name, T1.partitionid FROM user_profiles AS T1 JOIN tweets AS T2 ON T1.uid = T2.uid GROUP BY T2.uid HAVING COUNT(*) < 2
+
+[Q] Find the name of the user who tweeted more than once, and number of tweets tweeted by them.
+[A] SELECT T1.name, COUNT(*) FROM user_profiles AS T1 JOIN tweets AS T2 ON T1.uid = T2.uid GROUP BY T2.uid HAVING COUNT(*) > 1
+
+[Q] Find the average number of followers for the users who do not have any tweet.
+[A] SELECT AVG(followers) FROM user_profiles WHERE NOT UID IN (SELECT UID FROM tweets)
+
+[Q] Find the average number of followers for the users who had some tweets.
+[A] SELECT AVG(followers) FROM user_profiles WHERE UID IN (SELECT UID FROM tweets)
+
+[Q] Find the maximum and total number of followers of all users.
+[A] SELECT MAX(followers), SUM(followers) FROM user_profiles
+
+[Q] Find the names of all the catalog entries.
+[A] SELECT DISTINCT (catalog_entry_name) FROM catalog_contents
+
+[Q] Find the list of attribute data types possessed by more than 3 attribute definitions.
+[A] SELECT attribute_data_type FROM Attribute_Definitions GROUP BY attribute_data_type HAVING COUNT(*) > 3
+
+[Q] What is the attribute data type of the attribute with name "Green"?
+[A] SELECT attribute_data_type FROM Attribute_Definitions WHERE attribute_name = "Green"
+
+[Q] Find the name and level of catalog structure with level between 5 and 10.
+[A] SELECT catalog_level_name, catalog_level_number FROM Catalog_Structure WHERE catalog_level_number BETWEEN 5 AND 10
+
+[Q] Find all the catalog publishers whose name contains "Murray"
+[A] SELECT DISTINCT (catalog_publisher) FROM catalogs WHERE catalog_publisher LIKE "%Murray%"
+
+[Q] Which catalog publisher has published the most catalogs?
+[A] SELECT catalog_publisher FROM catalogs GROUP BY catalog_publisher ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Find the names and publication dates of all catalogs that have catalog level number greater than 5.
+[A] SELECT t1.catalog_name, t1.date_of_publication FROM catalogs AS t1 JOIN catalog_structure AS t2 ON t1.catalog_id = t2.catalog_id WHERE catalog_level_number > 5
+
+[Q] What are the entry names of catalog with the attribute possessed by most entries.
+[A] SELECT t1.catalog_entry_name FROM Catalog_Contents AS t1 JOIN Catalog_Contents_Additional_Attributes AS t2 ON t1.catalog_entry_id = t2.catalog_entry_id WHERE t2.attribute_value = (SELECT attribute_value FROM Catalog_Contents_Additional_Attributes GROUP BY attribute_value ORDER BY COUNT(*) DESC LIMIT 1)
+
+[Q] What is the entry name of the most expensive catalog (in USD)?
+[A] SELECT catalog_entry_name FROM catalog_contents ORDER BY price_in_dollars DESC LIMIT 1
+
+[Q] What is the level name of the cheapest catalog (in USD)?
+[A] SELECT t2.catalog_level_name FROM catalog_contents AS t1 JOIN catalog_structure AS t2 ON t1.catalog_level_number = t2.catalog_level_number ORDER BY t1.price_in_dollars LIMIT 1
+
+[Q] What are the average and minimum price (in Euro) of all products?
+[A] SELECT AVG(price_in_euros), MIN(price_in_euros) FROM catalog_contents
+
+[Q] What is the product with the highest height? Give me the catalog entry name.
+[A] SELECT catalog_entry_name FROM catalog_contents ORDER BY height DESC LIMIT 1
+
+[Q] Find the name of the product that has the smallest capacity.
+[A] SELECT catalog_entry_name FROM catalog_contents ORDER BY capacity LIMIT 1
+
+[Q] Find the names of all the products whose stock number starts with "2".
+[A] SELECT catalog_entry_name FROM catalog_contents WHERE product_stock_number LIKE "2%"
+
+[Q] Find the names of catalog entries with level number 8.
+[A] SELECT t1.catalog_entry_name FROM Catalog_Contents AS t1 JOIN Catalog_Contents_Additional_Attributes AS t2 ON t1.catalog_entry_id = t2.catalog_entry_id WHERE t2.catalog_level_number = "8"
+
+[Q] Find the names of the products with length smaller than 3 or height greater than 5.
+[A] SELECT catalog_entry_name FROM catalog_contents WHERE LENGTH < 3 OR width > 5
+
+[Q] Find the name and attribute ID of the attribute definitions with attribute value 0.
+[A] SELECT t1.attribute_name, t1.attribute_id FROM Attribute_Definitions AS t1 JOIN Catalog_Contents_Additional_Attributes AS t2 ON t1.attribute_id = t2.attribute_id WHERE t2.attribute_value = 0
+
+[Q] Find the name and capacity of products with price greater than 700 (in USD).
+[A] SELECT catalog_entry_name, capacity FROM Catalog_Contents WHERE price_in_dollars > 700
+
+[Q] Find the dates on which more than one revisions were made.
+[A] SELECT date_of_latest_revision FROM Catalogs GROUP BY date_of_latest_revision HAVING COUNT(*) > 1
+
+[Q] How many products are there in the records?
+[A] SELECT COUNT(*) FROM catalog_contents
+
+[Q] Name all the products with next entry ID greater than 8.
+[A] SELECT catalog_entry_name FROM catalog_contents WHERE next_entry_id > 8
+
+[Q] How many aircrafts do we have?
+[A] SELECT COUNT(*) FROM Aircraft
+
+[Q] Show name and distance for all aircrafts.
+[A] SELECT name, distance FROM Aircraft
+
+[Q] Show ids for all aircrafts with more than 1000 distance.
+[A] SELECT aid FROM Aircraft WHERE distance > 1000
+
+[Q] How many aircrafts have distance between 1000 and 5000?
+[A] SELECT COUNT(*) FROM Aircraft WHERE distance BETWEEN 1000 AND 5000
+
+[Q] What is the name and distance for aircraft with id 12?
+[A] SELECT name, distance FROM Aircraft WHERE aid = 12
+
+[Q] What is the minimum, average, and maximum distance of all aircrafts.
+[A] SELECT MIN(distance), AVG(distance), MAX(distance) FROM Aircraft
+
+[Q] Show the id and name of the aircraft with the maximum distance.
+[A] SELECT aid, name FROM Aircraft ORDER BY distance DESC LIMIT 1
+
+[Q] Show the name of aircrafts with top three lowest distances.
+[A] SELECT name FROM Aircraft ORDER BY distance LIMIT 3
+
+[Q] Show names for all aircrafts with distances more than the average.
+[A] SELECT name FROM Aircraft WHERE distance > (SELECT AVG(distance) FROM Aircraft)
+
+[Q] How many employees do we have?
+[A] SELECT COUNT(*) FROM Employee
+
+[Q] Show name and salary for all employees sorted by salary.
+[A] SELECT name, salary FROM Employee ORDER BY salary
+
+[Q] Show ids for all employees with at least 100000 salary.
+[A] SELECT eid FROM Employee WHERE salary > 100000
+
+[Q] How many employees have salary between 100000 and 200000?
+[A] SELECT COUNT(*) FROM Employee WHERE salary BETWEEN 100000 AND 200000
+
+[Q] What is the name and salary for employee with id 242518965?
+[A] SELECT name, salary FROM Employee WHERE eid = 242518965
+
+[Q] What is average and maximum salary of all employees.
+[A] SELECT AVG(salary), MAX(salary) FROM Employee
+
+[Q] Show the id and name of the employee with maximum salary.
+[A] SELECT eid, name FROM Employee ORDER BY salary DESC LIMIT 1
+
+[Q] Show the name of employees with three lowest salaries.
+[A] SELECT name FROM Employee ORDER BY salary LIMIT 3
+
+[Q] Show names for all employees with salary more than the average.
+[A] SELECT name FROM Employee WHERE salary > (SELECT AVG(salary) FROM Employee)
+
+[Q] Show the id and salary of Mark Young.
+[A] SELECT eid, salary FROM Employee WHERE name = 'Mark Young'
+
+[Q] How many flights do we have?
+[A] SELECT COUNT(*) FROM Flight
+
+[Q] Show flight number, origin, destination of all flights in the alphabetical order of the departure cities.
+[A] SELECT flno, origin, destination FROM Flight ORDER BY origin
+
+[Q] Show all flight number from Los Angeles.
+[A] SELECT flno FROM Flight WHERE origin = "Los Angeles"
+
+[Q] Show origins of all flights with destination Honolulu.
+[A] SELECT origin FROM Flight WHERE destination = "Honolulu"
+
+[Q] Show me the departure date and arrival date for all flights from Los Angeles to Honolulu.
+[A] SELECT departure_date, arrival_date FROM Flight WHERE origin = "Los Angeles" AND destination = "Honolulu"
+
+[Q] Show flight number for all flights with more than 2000 distance.
+[A] SELECT flno FROM Flight WHERE distance > 2000
+
+[Q] What is the average price for flights from Los Angeles to Honolulu.
+[A] SELECT AVG(price) FROM Flight WHERE origin = "Los Angeles" AND destination = "Honolulu"
+
+[Q] Show origin and destination for flights with price higher than 300.
+[A] SELECT origin, destination FROM Flight WHERE price > 300
+
+[Q] Show the flight number and distance of the flight with maximum price.
+[A] SELECT flno, distance FROM Flight ORDER BY price DESC LIMIT 1
+
+[Q] Show the flight number of flights with three lowest distances.
+[A] SELECT flno FROM Flight ORDER BY distance LIMIT 3
+
+[Q] What is the average distance and average price for flights from Los Angeles.
+[A] SELECT AVG(distance), AVG(price) FROM Flight WHERE origin = "Los Angeles"
+
+[Q] Show all origins and the number of flights from each origin.
+[A] SELECT origin, COUNT(*) FROM Flight GROUP BY origin
+
+[Q] Show all destinations and the number of flights to each destination.
+[A] SELECT destination, COUNT(*) FROM Flight GROUP BY destination
+
+[Q] Which origin has most number of flights?
+[A] SELECT origin FROM Flight GROUP BY origin ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Which destination has least number of flights?
+[A] SELECT destination FROM Flight GROUP BY destination ORDER BY COUNT(*) LIMIT 1
+
+[Q] What is the aircraft name for the flight with number 99
+[A] SELECT T2.name FROM Flight AS T1 JOIN Aircraft AS T2 ON T1.aid = T2.aid WHERE T1.flno = 99
+
+[Q] Show all flight numbers with aircraft Airbus A340-300.
+[A] SELECT T1.flno FROM Flight AS T1 JOIN Aircraft AS T2 ON T1.aid = T2.aid WHERE T2.name = "Airbus A340-300"
+
+[Q] Show aircraft names and number of flights for each aircraft.
+[A] SELECT T2.name, COUNT(*) FROM Flight AS T1 JOIN Aircraft AS T2 ON T1.aid = T2.aid GROUP BY T1.aid
+
+[Q] Show names for all aircraft with at least two flights.
+[A] SELECT T2.name FROM Flight AS T1 JOIN Aircraft AS T2 ON T1.aid = T2.aid GROUP BY T1.aid HAVING COUNT(*) >= 2
+
+[Q] How many employees have certificate.
+[A] SELECT COUNT(DISTINCT eid) FROM Certificate
+
+[Q] Show ids for all employees who don't have a certificate.
+[A] SELECT eid FROM Employee EXCEPT SELECT eid FROM Certificate
+
+[Q] Show names for all aircrafts of which John Williams has certificates.
+[A] SELECT T3.name FROM Employee AS T1 JOIN Certificate AS T2 ON T1.eid = T2.eid JOIN Aircraft AS T3 ON T3.aid = T2.aid WHERE T1.name = "John Williams"
+
+[Q] Show names for all employees who have certificate of Boeing 737-800.
+[A] SELECT T1.name FROM Employee AS T1 JOIN Certificate AS T2 ON T1.eid = T2.eid JOIN Aircraft AS T3 ON T3.aid = T2.aid WHERE T3.name = "Boeing 737-800"
+
+[Q] Show names for all employees who have certificates on both Boeing 737-800 and Airbus A340-300.
+[A] SELECT T1.name FROM Employee AS T1 JOIN Certificate AS T2 ON T1.eid = T2.eid JOIN Aircraft AS T3 ON T3.aid = T2.aid WHERE T3.name = "Boeing 737-800" INTERSECT SELECT T1.name FROM Employee AS T1 JOIN Certificate AS T2 ON T1.eid = T2.eid JOIN Aircraft AS T3 ON T3.aid = T2.aid WHERE T3.name = "Airbus A340-300"
+
+[Q] Show names for all employees who do not have certificate of Boeing 737-800.
+[A] SELECT name FROM Employee EXCEPT SELECT T1.name FROM Employee AS T1 JOIN Certificate AS T2 ON T1.eid = T2.eid JOIN Aircraft AS T3 ON T3.aid = T2.aid WHERE T3.name = "Boeing 737-800"
+
+[Q] Show the name of aircraft which fewest people have its certificate.
+[A] SELECT T2.name FROM Certificate AS T1 JOIN Aircraft AS T2 ON T2.aid = T1.aid GROUP BY T1.aid ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Show the name and distance of the aircrafts with more than 5000 distance and which at least 5 people have its certificate.
+[A] SELECT T2.name FROM Certificate AS T1 JOIN Aircraft AS T2 ON T2.aid = T1.aid WHERE T2.distance > 5000 GROUP BY T1.aid ORDER BY COUNT(*) >= 5
+
+[Q] what is the salary and name of the employee who has the most number of aircraft certificates?
+[A] SELECT T1.name, T1.salary FROM Employee AS T1 JOIN Certificate AS T2 ON T1.eid = T2.eid GROUP BY T1.eid ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] What is the salary and name of the employee who has the most number of certificates on aircrafts with distance more than 5000?
+[A] SELECT T1.name FROM Employee AS T1 JOIN Certificate AS T2 ON T1.eid = T2.eid JOIN Aircraft AS T3 ON T3.aid = T2.aid WHERE T3.distance > 5000 GROUP BY T1.eid ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] How many allergies are there?
+[A] SELECT COUNT(DISTINCT allergy) FROM Allergy_type
+
+[Q] How many different allergy types exist?
+[A] SELECT COUNT(DISTINCT allergytype) FROM Allergy_type
+
+[Q] Show all allergy types.
+[A] SELECT DISTINCT allergytype FROM Allergy_type
+
+[Q] Show all allergies and their types.
+[A] SELECT allergy, allergytype FROM Allergy_type
+
+[Q] Show all allergies with type food.
+[A] SELECT DISTINCT allergy FROM Allergy_type WHERE allergytype = "food"
+
+[Q] What is the type of allergy Cat?
+[A] SELECT allergytype FROM Allergy_type WHERE allergy = "Cat"
+
+[Q] How many allergies have type animal?
+[A] SELECT COUNT(*) FROM Allergy_type WHERE allergytype = "animal"
+
+[Q] Show all allergy types and the number of allergies in each type.
+[A] SELECT allergytype, COUNT(*) FROM Allergy_type GROUP BY allergytype
+
+[Q] Which allergy type has most number of allergies?
+[A] SELECT allergytype FROM Allergy_type GROUP BY allergytype ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Which allergy type has least number of allergies?
+[A] SELECT allergytype FROM Allergy_type GROUP BY allergytype ORDER BY COUNT(*) LIMIT 1
+
+[Q] How many students are there?
+[A] SELECT COUNT(*) FROM Student
+
+[Q] Show first name and last name for all students.
+[A] SELECT Fname, Lname FROM Student
+
+[Q] How many different advisors are listed?
+[A] SELECT COUNT(DISTINCT advisor) FROM Student
+
+[Q] Show all majors.
+[A] SELECT DISTINCT Major FROM Student
+
+[Q] Show all cities where students live.
+[A] SELECT DISTINCT city_code FROM Student
+
+[Q] Show first name, last name, age for all female students. Their sex is F.
+[A] SELECT Fname, Lname, Age FROM Student WHERE Sex = 'F'
+
+[Q] Show student ids for all male students.
+[A] SELECT StuID FROM Student WHERE Sex = 'M'
+
+[Q] How many students are age 18?
+[A] SELECT COUNT(*) FROM Student WHERE age = 18
+
+[Q] Show all student ids who are older than 20.
+[A] SELECT StuID FROM Student WHERE age > 20
+
+[Q] Which city does the student whose last name is "Kim" live in?
+[A] SELECT city_code FROM Student WHERE LName = "Kim"
+
+[Q] Who is the advisor of student with ID 1004?
+[A] SELECT Advisor FROM Student WHERE StuID = 1004
+
+[Q] How many students live in HKG or CHI?
+[A] SELECT COUNT(*) FROM Student WHERE city_code = "HKG" OR city_code = "CHI"
+
+[Q] Show the minimum, average, and maximum age of all students.
+[A] SELECT MIN(age), AVG(age), MAX(age) FROM Student
+
+[Q] What is the last name of the youngest student?
+[A] SELECT LName FROM Student WHERE age = (SELECT MIN(age) FROM Student)
+
+[Q] Show the student id of the oldest student.
+[A] SELECT StuID FROM Student WHERE age = (SELECT MAX(age) FROM Student)
+
+[Q] Show all majors and corresponding number of students.
+[A] SELECT major, COUNT(*) FROM Student GROUP BY major
+
+[Q] Which major has most number of students?
+[A] SELECT major FROM Student GROUP BY major ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Show all ages and corresponding number of students.
+[A] SELECT age, COUNT(*) FROM Student GROUP BY age
+
+[Q] Show the average age for male and female students.
+[A] SELECT AVG(age), sex FROM Student GROUP BY sex
+
+[Q] Show all cities and corresponding number of students.
+[A] SELECT city_code, COUNT(*) FROM Student GROUP BY city_code
+
+[Q] Show all advisors and corresponding number of students.
+[A] SELECT advisor, COUNT(*) FROM Student GROUP BY advisor
+
+[Q] Which advisor has most number of students?
+[A] SELECT advisor FROM Student GROUP BY advisor ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] How many students have cat allergies?
+[A] SELECT COUNT(*) FROM Has_allergy WHERE Allergy = "Cat"
+
+[Q] Show all student IDs who have at least two allergies.
+[A] SELECT StuID FROM Has_allergy GROUP BY StuID HAVING COUNT(*) >= 2
+
+[Q] What are the student ids of students who don't have any allergies?
+[A] SELECT StuID FROM Student EXCEPT SELECT StuID FROM Has_allergy
+
+[Q] How many female students have milk or egg allergies?
+[A] SELECT COUNT(*) FROM has_allergy AS T1 JOIN Student AS T2 ON T1.StuID = T2.StuID WHERE T2.sex = "F" AND T1.allergy = "Milk" OR T1.allergy = "Eggs"
+
+[Q] How many students have a food allergy?
+[A] SELECT COUNT(*) FROM Has_allergy AS T1 JOIN Allergy_type AS T2 ON T1.allergy = T2.allergy WHERE T2.allergytype = "food"
+
+[Q] Which allergy has most number of students affected?
+[A] SELECT Allergy FROM Has_allergy GROUP BY Allergy ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Show all allergies with number of students affected.
+[A] SELECT Allergy, COUNT(*) FROM Has_allergy GROUP BY Allergy
+
+[Q] Show all allergy type with number of students affected.
+[A] SELECT T2.allergytype, COUNT(*) FROM Has_allergy AS T1 JOIN Allergy_type AS T2 ON T1.allergy = T2.allergy GROUP BY T2.allergytype
+
+[Q] Find the last name and age of the student who has allergy to both milk and cat.
+[A] SELECT lname, age FROM Student WHERE StuID IN (SELECT StuID FROM Has_allergy WHERE Allergy = "Milk" INTERSECT SELECT StuID FROM Has_allergy WHERE Allergy = "Cat")
+
+[Q] What are the allergies and their types that the student with first name Lisa has? And order the result by name of allergies.
+[A] SELECT T1.Allergy, T1.AllergyType FROM Allergy_type AS T1 JOIN Has_allergy AS T2 ON T1.Allergy = T2.Allergy JOIN Student AS T3 ON T3.StuID = T2.StuID WHERE T3.Fname = "Lisa" ORDER BY T1.Allergy
+
+[Q] Find the first name and gender of the student who has allergy to milk but not cat.
+[A] SELECT fname, sex FROM Student WHERE StuID IN (SELECT StuID FROM Has_allergy WHERE Allergy = "Milk" EXCEPT SELECT StuID FROM Has_allergy WHERE Allergy = "Cat")
+
+[Q] Find the average age of the students who have allergies with food and animal types.
+[A] SELECT AVG(age) FROM Student WHERE StuID IN (SELECT T1.StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy = T2.Allergy WHERE T2.allergytype = "food" INTERSECT SELECT T1.StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy = T2.Allergy WHERE T2.allergytype = "animal")
+
+[Q] List the first and last name of the students who do not have any food type allergy.
+[A] SELECT fname, lname FROM Student WHERE NOT StuID IN (SELECT T1.StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy = T2.Allergy WHERE T2.allergytype = "food")
+
+[Q] Find the number of male (sex is 'M') students who have some food type allery.
+[A] SELECT COUNT(*) FROM Student WHERE sex = "M" AND StuID IN (SELECT StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy = T2.Allergy WHERE T2.allergytype = "food")
+
+[Q] Find the different first names and cities of the students who have allergy to milk or cat.
+[A] SELECT DISTINCT T1.fname, T1.city_code FROM Student AS T1 JOIN Has_Allergy AS T2 ON T1.stuid = T2.stuid WHERE T2.Allergy = "Milk" OR T2.Allergy = "Cat"
+
+[Q] Find the number of students who are older than 18 and do not have allergy to either food or animal.
+[A] SELECT COUNT(*) FROM Student WHERE age > 18 AND NOT StuID IN (SELECT StuID FROM Has_allergy AS T1 JOIN Allergy_Type AS T2 ON T1.Allergy = T2.Allergy WHERE T2.allergytype = "food" OR T2.allergytype = "animal")
+
+[Q] Find the first name and major of the students who are not allegry to soy.
+[A] SELECT fname, major FROM Student WHERE NOT StuID IN (SELECT StuID FROM Has_allergy WHERE Allergy = "Soy")
+
+[Q] A list of the top 5 countries by number of invoices. List country name and number of invoices.
+[A] SELECT billing_country, COUNT(*) FROM invoices GROUP BY billing_country ORDER BY COUNT(*) DESC LIMIT 5
+
+[Q] A list of the top 8 countries by gross/total invoice size. List country name and gross invoice size.
+[A] SELECT billing_country, SUM(total) FROM invoices GROUP BY billing_country ORDER BY SUM(total) DESC LIMIT 8
+
+[Q] A list of the top 10 countries by average invoice size. List country name and average invoice size.
+[A] SELECT billing_country, AVG(total) FROM invoices GROUP BY billing_country ORDER BY AVG(total) DESC LIMIT 10
+
+[Q] Find out 5 customers who most recently purchased something. List customers' first and last name.
+[A] SELECT T1.first_name, T1.last_name FROM customers AS T1 JOIN invoices AS T2 ON T2.customer_id = T1.id ORDER BY T2.invoice_date DESC LIMIT 5
+
+[Q] Find out the top 10 customers by total number of orders. List customers' first and last name and the number of total orders.
+[A] SELECT T1.first_name, T1.last_name, COUNT(*) FROM customers AS T1 JOIN invoices AS T2 ON T2.customer_id = T1.id GROUP BY T1.id ORDER BY COUNT(*) DESC LIMIT 10
+
+[Q] List the top 10 customers by total gross sales. List customers' first and last name and total gross sales.
+[A] SELECT T1.first_name, T1.last_name, SUM(T2.total) FROM customers AS T1 JOIN invoices AS T2 ON T2.customer_id = T1.id GROUP BY T1.id ORDER BY SUM(T2.total) DESC LIMIT 10
+
+[Q] List the top 5 genres by number of tracks. List genres name and total tracks.
+[A] SELECT T1.name, COUNT(*) FROM genres AS T1 JOIN tracks AS T2 ON T2.genre_id = T1.id GROUP BY T1.id ORDER BY COUNT(*) DESC LIMIT 5
+
+[Q] List every album's title.
+[A] SELECT title FROM albums
+
+[Q] List every album ordered by album title in ascending order.
+[A] SELECT title FROM albums ORDER BY title
+
+[Q] List every album whose title starts with A in alphabetical order.
+[A] SELECT title FROM albums WHERE title LIKE 'A%' ORDER BY title
+
+[Q] List the customers first and last name of 10 least expensive invoices.
+[A] SELECT T1.first_name, T1.last_name FROM customers AS T1 JOIN invoices AS T2 ON T2.customer_id = T1.id ORDER BY total LIMIT 10
+
+[Q] List total amount of  invoice from Chicago, IL.
+[A] SELECT SUM(total) FROM invoices WHERE billing_city = "Chicago" AND billing_state = "IL"
+
+[Q] List the number of invoices from Chicago, IL.
+[A] SELECT COUNT(*) FROM invoices WHERE billing_city = "Chicago" AND billing_state = "IL"
+
+[Q] List the number of invoices from the US, grouped by state.
+[A] SELECT billing_state, COUNT(*) FROM invoices WHERE billing_country = "USA" GROUP BY billing_state
+
+[Q] List the state in the US with the most invoices.
+[A] SELECT billing_state, COUNT(*) FROM invoices WHERE billing_country = "USA" GROUP BY billing_state ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] List the number of invoices and the invoice total from California.
+[A] SELECT billing_state, COUNT(*), SUM(total) FROM invoices WHERE billing_state = "CA"
+
+[Q] List Aerosmith's albums.
+[A] SELECT T1.title FROM albums AS T1 JOIN artists AS T2 ON T1.artist_id = T2.id WHERE T2.name = "Aerosmith"
+
+[Q] How many albums does Billy Cobham has?
+[A] SELECT COUNT(*) FROM albums AS T1 JOIN artists AS T2 ON T1.artist_id = T2.id WHERE T2.name = "Billy Cobham"
+
+[Q] Eduardo Martins is a customer at which company?
+[A] SELECT company FROM customers WHERE first_name = "Eduardo" AND last_name = "Martins"
+
+[Q] What is Astrid Gruber's email and phone number?
+[A] SELECT email, phone FROM customers WHERE first_name = "Astrid" AND last_name = "Gruber"
+
+[Q] How many customers live in Prague city?
+[A] SELECT COUNT(*) FROM customers WHERE city = "Prague"
+
+[Q] How many customers in state of CA?
+[A] SELECT COUNT(*) FROM customers WHERE state = "CA"
+
+[Q] What country does Roberto Almeida live?
+[A] SELECT country FROM customers WHERE first_name = "Roberto" AND last_name = "Almeida"
+
+[Q] List the name of albums that are released by aritist whose name has 'Led'
+[A] SELECT T2.title FROM artists AS T1 JOIN albums AS T2 ON T1.id = T2.artist_id WHERE T1.name LIKE '%Led%'
+
+[Q] How many customers does Steve Johnson support?
+[A] SELECT COUNT(*) FROM employees AS T1 JOIN customers AS T2 ON T2.support_rep_id = T1.id WHERE T1.first_name = "Steve" AND T1.last_name = "Johnson"
+
+[Q] What is the title, phone and hire date of Nancy Edwards?
+[A] SELECT title, phone, hire_date FROM employees WHERE first_name = "Nancy" AND last_name = "Edwards"
+
+[Q] find the full name of employees who report to Nancy Edwards?
+[A] SELECT T2.first_name, T2.last_name FROM employees AS T1 JOIN employees AS T2 ON T1.id = T2.reports_to WHERE T1.first_name = "Nancy" AND T1.last_name = "Edwards"
+
+[Q] What is the address of employee Nancy Edwards?
+[A] SELECT address FROM employees WHERE first_name = "Nancy" AND last_name = "Edwards"
+
+[Q] Find the full name of employee who supported the most number of customers.
+[A] SELECT T1.first_name, T1.last_name FROM employees AS T1 JOIN customers AS T2 ON T1.id = T2.support_rep_id GROUP BY T1.id ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] How many employees are living in Canada?
+[A] SELECT COUNT(*) FROM employees WHERE country = "Canada"
+
+[Q] What is employee Nancy Edwards's phone number?
+[A] SELECT phone FROM employees WHERE first_name = "Nancy" AND last_name = "Edwards"
+
+[Q] Who is the youngest employee in the company? List employee's first and last name.
+[A] SELECT first_name, last_name FROM employees ORDER BY birth_date DESC LIMIT 1
+
+[Q] List top 10 employee work longest in the company. List employee's first and last name.
+[A] SELECT first_name, last_name FROM employees ORDER BY hire_date LIMIT 10
+
+[Q] Find the number of employees whose title is IT Staff from each city?
+[A] SELECT COUNT(*), city FROM employees WHERE title = 'IT Staff' GROUP BY city
+
+[Q] Which employee manage most number of peoples? List employee's first and last name, and number of people report to that employee.
+[A] SELECT T2.first_name, T2.last_name, COUNT(T1.reports_to) FROM employees AS T1 JOIN employees AS T2 ON T1.reports_to = T2.id GROUP BY T1.reports_to ORDER BY COUNT(T1.reports_to) DESC LIMIT 1
+
+[Q] How many orders does Lucas Mancini has?
+[A] SELECT COUNT(*) FROM customers AS T1 JOIN invoices AS T2 ON T1.id = T2.customer_id WHERE T1.first_name = "Lucas" AND T1.last_name = "Mancini"
+
+[Q] What is the total amount of money spent by Lucas Mancini?
+[A] SELECT SUM(T2.total) FROM customers AS T1 JOIN invoices AS T2 ON T1.id = T2.customer_id WHERE T1.first_name = "Lucas" AND T1.last_name = "Mancini"
+
+[Q] List all media types.
+[A] SELECT name FROM media_types
+
+[Q] List all different genre types.
+[A] SELECT DISTINCT name FROM genres
+
+[Q] List the name of all playlist.
+[A] SELECT name FROM playlists
+
+[Q] Who is the composer of track Fast As a Shark?
+[A] SELECT composer FROM tracks WHERE name = "Fast As a Shark"
+
+[Q] How long does track Fast As a Shark has?
+[A] SELECT milliseconds FROM tracks WHERE name = "Fast As a Shark"
+
+[Q] What is the name of tracks whose genre is Rock?
+[A] SELECT T2.name FROM genres AS T1 JOIN tracks AS T2 ON T1.id = T2.genre_id WHERE T1.name = "Rock"
+
+[Q] What is title of album which track Balls to the Wall belongs to?
+[A] SELECT T1.title FROM albums AS T1 JOIN tracks AS T2 ON T1.id = T2.genre_id WHERE T2.name = "Balls to the Wall"
+
+[Q] List name of all tracks in Balls to the Wall.
+[A] SELECT T2.name FROM albums AS T1 JOIN tracks AS T2 ON T1.id = T2.genre_id WHERE T1.title = "Balls to the Wall"
+
+[Q] List title of albums have the number of tracks greater than 10.
+[A] SELECT T1.title FROM albums AS T1 JOIN tracks AS T2 ON T1.id = T2.album_id GROUP BY T1.id HAVING COUNT(T1.id) > 10
+
+[Q] List the name of tracks belongs to genre Rock and whose media type is MPEG audio file.
+[A] SELECT T2.name FROM genres AS T1 JOIN tracks AS T2 ON T1.id = T2.genre_id JOIN media_types AS T3 ON T3.id = T2.media_type_id WHERE T1.name = "Rock" AND T3.name = "MPEG audio file"
+
+[Q] List the name of tracks belongs to genre Rock or media type is MPEG audio file.
+[A] SELECT T2.name FROM genres AS T1 JOIN tracks AS T2 ON T1.id = T2.genre_id JOIN media_types AS T3 ON T3.id = T2.media_type_id WHERE T1.name = "Rock" OR T3.name = "MPEG audio file"
+
+[Q] List the name of tracks belongs to genre Rock or genre Jazz.
+[A] SELECT T2.name FROM genres AS T1 JOIN tracks AS T2 ON T1.id = T2.genre_id WHERE T1.name = "Rock" OR T1.name = "Jazz"
+
+[Q] List the name of all tracks in the playlists of Movies.
+[A] SELECT T1.name FROM tracks AS T1 JOIN playlist_tracks AS T2 ON T1.id = T2.track_id JOIN playlists AS T3 ON T3.id = T2.playlist_id WHERE T3.name = "Movies"
+
+[Q] List the name of playlist which has number of tracks greater than 100.
+[A] SELECT T2.name FROM playlist_tracks AS T1 JOIN playlists AS T2 ON T2.id = T1.playlist_id GROUP BY T1.playlist_id HAVING COUNT(T1.track_id) > 100
+
+[Q] List all tracks bought by customer Daan Peeters.
+[A] SELECT T1.name FROM tracks AS T1 JOIN invoice_lines AS T2 ON T1.id = T2.track_id JOIN invoices AS T3 ON T3.id = T2.invoice_id JOIN customers AS T4 ON T4.id = T3.customer_id WHERE T4.first_name = "Daan" AND T4.last_name = "Peeters"
+
+[Q] How much is the track Fast As a Shark?
+[A] SELECT unit_price FROM tracks WHERE name = "Fast As a Shark"
+
+[Q] Find the name of tracks which are in Movies playlist but not in music playlist.
+[A] SELECT T1.name FROM tracks AS T1 JOIN playlist_tracks AS T2 ON T1.id = T2.track_id JOIN playlists AS T3 ON T2.playlist_id = T3.id WHERE T3.name = 'Movies' EXCEPT SELECT T1.name FROM tracks AS T1 JOIN playlist_tracks AS T2 ON T1.id = T2.track_id JOIN playlists AS T3 ON T2.playlist_id = T3.id WHERE T3.name = 'Music'
+
+[Q] Find the name of tracks which are in both Movies and music playlists.
+[A] SELECT T1.name FROM tracks AS T1 JOIN playlist_tracks AS T2 ON T1.id = T2.track_id JOIN playlists AS T3 ON T2.playlist_id = T3.id WHERE T3.name = 'Movies' INTERSECT SELECT T1.name FROM tracks AS T1 JOIN playlist_tracks AS T2 ON T1.id = T2.track_id JOIN playlists AS T3 ON T2.playlist_id = T3.id WHERE T3.name = 'Music'
+
+[Q] Find number of tracks in each genre?
+[A] SELECT COUNT(*), T1.name FROM genres AS T1 JOIN tracks AS T2 ON T1.id = T2.genre_id GROUP BY T1.name
+
+[Q] How many editors are there?
+[A] SELECT COUNT(*) FROM editor
+
+[Q] List the names of editors in ascending order of age.
+[A] SELECT Name FROM editor ORDER BY Age
+
+[Q] What are the names and ages of editors?
+[A] SELECT Name, Age FROM editor
+
+[Q] List the names of editors who are older than 25.
+[A] SELECT Name FROM editor WHERE Age > 25
+
+[Q] Show the names of editors of age either 24 or 25.
+[A] SELECT Name FROM editor WHERE Age = 24 OR Age = 25
+
+[Q] What is the name of the youngest editor?
+[A] SELECT Name FROM editor ORDER BY Age LIMIT 1
+
+[Q] What are the different ages of editors? Show each age along with the number of editors of that age.
+[A] SELECT Age, COUNT(*) FROM editor GROUP BY Age
+
+[Q] Please show the most common age of editors.
+[A] SELECT Age FROM editor GROUP BY Age ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Show the distinct themes of journals.
+[A] SELECT DISTINCT Theme FROM journal
+
+[Q] Show the names of editors and the theme of journals for which they serve on committees.
+[A] SELECT T2.Name, T3.Theme FROM journal_committee AS T1 JOIN editor AS T2 ON T1.Editor_ID = T2.Editor_ID JOIN journal AS T3 ON T1.Journal_ID = T3.Journal_ID
+
+[Q] Show the names and ages of editors and the theme of journals for which they serve on committees, in ascending alphabetical order of theme.
+[A] SELECT T2.Name, T2.age, T3.Theme FROM journal_committee AS T1 JOIN editor AS T2 ON T1.Editor_ID = T2.Editor_ID JOIN journal AS T3 ON T1.Journal_ID = T3.Journal_ID ORDER BY T3.Theme
+
+[Q] Show the names of editors that are on the committee of journals with sales bigger than 3000.
+[A] SELECT T2.Name FROM journal_committee AS T1 JOIN editor AS T2 ON T1.Editor_ID = T2.Editor_ID JOIN journal AS T3 ON T1.Journal_ID = T3.Journal_ID WHERE T3.Sales > 3000
+
+[Q] Show the id, name of each editor and the number of journal committees they are on.
+[A] SELECT T1.editor_id, T1.Name, COUNT(*) FROM editor AS T1 JOIN journal_committee AS T2 ON T1.Editor_ID = T2.Editor_ID GROUP BY T1.editor_id
+
+[Q] Show the names of editors that are on at least two journal committees.
+[A] SELECT T1.Name FROM editor AS T1 JOIN journal_committee AS T2 ON T1.Editor_ID = T2.Editor_ID GROUP BY T1.Name HAVING COUNT(*) >= 2
+
+[Q] List the names of editors that are not on any journal committee.
+[A] SELECT Name FROM editor WHERE NOT editor_id IN (SELECT editor_id FROM journal_committee)
+
+[Q] List the date, theme and sales of the journal which did not have any of the listed editors serving on committee.
+[A] SELECT date, theme, sales FROM journal EXCEPT SELECT T1.date, T1.theme, T1.sales FROM journal AS T1 JOIN journal_committee AS T2 ON T1.journal_ID = T2.journal_ID
+
+[Q] What is the average sales of the journals that have an editor whose work type is 'Photo'?
+[A] SELECT AVG(T1.sales) FROM journal AS T1 JOIN journal_committee AS T2 ON T1.journal_ID = T2.journal_ID WHERE T2.work_type = 'Photo'
+
+[Q] How many accounts do we have?
+[A] SELECT COUNT(*) FROM Accounts
+
+[Q] Show ids, customer ids, names for all accounts.
+[A] SELECT account_id, customer_id, account_name FROM Accounts
+
+[Q] Show other account details for account with name 338.
+[A] SELECT other_account_details FROM Accounts WHERE account_name = "338"
+
+[Q] What is the first name, last name, and phone of the customer with account name 162?
+[A] SELECT T2.customer_first_name, T2.customer_last_name, T2.customer_phone FROM Accounts AS T1 JOIN Customers AS T2 ON T1.customer_id = T2.customer_id WHERE T1.account_name = "162"
+
+[Q] How many accounts does the customer with first name Art and last name Turcotte have?
+[A] SELECT COUNT(*) FROM Accounts AS T1 JOIN Customers AS T2 ON T1.customer_id = T2.customer_id WHERE T2.customer_first_name = "Art" AND T2.customer_last_name = "Turcotte"
+
+[Q] Show all customer ids and the number of accounts for each customer.
+[A] SELECT customer_id, COUNT(*) FROM Accounts GROUP BY customer_id
+
+[Q] Show the customer id and number of accounts with most accounts.
+[A] SELECT customer_id, COUNT(*) FROM Accounts GROUP BY customer_id ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] What is the customer first, last name and id with least number of accounts.
+[A] SELECT T2.customer_first_name, T2.customer_last_name, T1.customer_id FROM Accounts AS T1 JOIN Customers AS T2 ON T1.customer_id = T2.customer_id GROUP BY T1.customer_id ORDER BY COUNT(*) LIMIT 1
+
+[Q] Show the number of all customers without an account.
+[A] SELECT COUNT(*) FROM Customers WHERE NOT customer_id IN (SELECT customer_id FROM Accounts)
+
+[Q] Show the first names and last names of customers without any account.
+[A] SELECT customer_first_name, customer_last_name FROM Customers EXCEPT SELECT T1.customer_first_name, T1.customer_last_name FROM Customers AS T1 JOIN Accounts AS T2 ON T1.customer_id = T2.customer_id
+
+[Q] Show distinct first and last names for all customers with an account.
+[A] SELECT DISTINCT T1.customer_first_name, T1.customer_last_name FROM Customers AS T1 JOIN Accounts AS T2 ON T1.customer_id = T2.customer_id
+
+[Q] How many customers have an account?
+[A] SELECT COUNT(DISTINCT customer_id) FROM Accounts
+
+[Q] How many customers do we have?
+[A] SELECT COUNT(*) FROM Customers
+
+[Q] Show ids, first names, last names, and phones for all customers.
+[A] SELECT customer_id, customer_first_name, customer_last_name, customer_phone FROM Customers
+
+[Q] What is the phone and email for customer with first name Aniyah and last name Feest?
+[A] SELECT customer_phone, customer_email FROM Customers WHERE customer_first_name = "Aniyah" AND customer_last_name = "Feest"
+
+[Q] Show the number of customer cards.
+[A] SELECT COUNT(*) FROM Customers_cards
+
+[Q] Show ids, customer ids, card type codes, card numbers for all cards.
+[A] SELECT card_id, customer_id, card_type_code, card_number FROM Customers_cards
+
+[Q] Show the date valid from and the date valid to for the card with card number '4560596484842'.
+[A] SELECT date_valid_from, date_valid_to FROM Customers_cards WHERE card_number = "4560596484842"
+
+[Q] What is the first name, last name, and phone of the customer with card 4560596484842.
+[A] SELECT T2.customer_first_name, T2.customer_last_name, T2.customer_phone FROM Customers_cards AS T1 JOIN Customers AS T2 ON T1.customer_id = T2.customer_id WHERE T1.card_number = "4560596484842"
+
+[Q] How many cards does customer Art Turcotte have?
+[A] SELECT COUNT(*) FROM Customers_cards AS T1 JOIN Customers AS T2 ON T1.customer_id = T2.customer_id WHERE T2.customer_first_name = "Art" AND T2.customer_last_name = "Turcotte"
+
+[Q] How many debit cards do we have?
+[A] SELECT COUNT(*) FROM Customers_cards WHERE card_type_code = "Debit"
+
+[Q] How many credit cards does customer Blanche Huels have?
+[A] SELECT COUNT(*) FROM Customers_cards AS T1 JOIN Customers AS T2 ON T1.customer_id = T2.customer_id WHERE T2.customer_first_name = "Blanche" AND T2.customer_last_name = "Huels" AND T1.card_type_code = "Credit"
+
+[Q] Show all customer ids and the number of cards owned by each customer.
+[A] SELECT customer_id, COUNT(*) FROM Customers_cards GROUP BY customer_id
+
+[Q] What is the customer id with most number of cards, and how many does he have?
+[A] SELECT customer_id, COUNT(*) FROM Customers_cards GROUP BY customer_id ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Show id, first and last names for all customers with at least two cards.
+[A] SELECT T1.customer_id, T2.customer_first_name, T2.customer_last_name FROM Customers_cards AS T1 JOIN Customers AS T2 ON T1.customer_id = T2.customer_id GROUP BY T1.customer_id HAVING COUNT(*) >= 2
+
+[Q] What is the customer id, first and last name with least number of accounts.
+[A] SELECT T1.customer_id, T2.customer_first_name, T2.customer_last_name FROM Customers_cards AS T1 JOIN Customers AS T2 ON T1.customer_id = T2.customer_id GROUP BY T1.customer_id ORDER BY COUNT(*) LIMIT 1
+
+[Q] Show all card type codes and the number of cards in each type.
+[A] SELECT card_type_code, COUNT(*) FROM Customers_cards GROUP BY card_type_code
+
+[Q] What is the card type code with most number of cards?
+[A] SELECT card_type_code FROM Customers_cards GROUP BY card_type_code ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Show card type codes with at least 5 cards.
+[A] SELECT card_type_code FROM Customers_cards GROUP BY card_type_code HAVING COUNT(*) >= 5
+
+[Q] Show all card type codes and the number of customers holding cards in each type.
+[A] SELECT card_type_code, COUNT(DISTINCT customer_id) FROM Customers_cards GROUP BY card_type_code
+
+[Q] Show the customer ids and firstname without a credit card.
+[A] SELECT customer_id, customer_first_name FROM Customers EXCEPT SELECT T1.customer_id, T2.customer_first_name FROM Customers_cards AS T1 JOIN Customers AS T2 ON T1.customer_id = T2.customer_id WHERE card_type_code = "Credit"
+
+[Q] Show all card type codes.
+[A] SELECT DISTINCT card_type_code FROM Customers_Cards
+
+[Q] Show the number of card types.
+[A] SELECT COUNT(DISTINCT card_type_code) FROM Customers_Cards
+
+[Q] Show all transaction types.
+[A] SELECT DISTINCT transaction_type FROM Financial_Transactions
+
+[Q] Show the number of transaction types.
+[A] SELECT COUNT(DISTINCT transaction_type) FROM Financial_Transactions
+
+[Q] What is the average and total transaction amount?
+[A] SELECT AVG(transaction_amount), SUM(transaction_amount) FROM Financial_transactions
+
+[Q] Show the card type codes and the number of transactions.
+[A] SELECT T2.card_type_code, COUNT(*) FROM Financial_transactions AS T1 JOIN Customers_cards AS T2 ON T1.card_id = T2.card_id GROUP BY T2.card_type_code
+
+[Q] Show the transaction type and the number of transactions.
+[A] SELECT transaction_type, COUNT(*) FROM Financial_transactions GROUP BY transaction_type
+
+[Q] What is the transaction type that has processed the greatest total amount in transactions?
+[A] SELECT transaction_type FROM Financial_transactions GROUP BY transaction_type ORDER BY SUM(transaction_amount) DESC LIMIT 1
+
+[Q] Show the account id and the number of transactions for each account
+[A] SELECT account_id, COUNT(*) FROM Financial_transactions GROUP BY account_id
+
+[Q] How many tracks do we have?
+[A] SELECT COUNT(*) FROM track
+
+[Q] Show the name and location for all tracks.
+[A] SELECT name, LOCATION FROM track
+
+[Q] Show names and seatings, ordered by seating for all tracks opened after 2000.
+[A] SELECT name, seating FROM track WHERE year_opened > 2000 ORDER BY seating
+
+[Q] What is the name, location and seating for the most recently opened track?
+[A] SELECT name, LOCATION, seating FROM track ORDER BY year_opened DESC LIMIT 1
+
+[Q] What is the minimum, maximum, and average seating for all tracks.
+[A] SELECT MIN(seating), MAX(seating), AVG(seating) FROM track
+
+[Q] Show the name, location, open year for all tracks with a seating higher than the average.
+[A] SELECT name, LOCATION, year_opened FROM track WHERE seating > (SELECT AVG(seating) FROM track)
+
+[Q] What are distinct locations where tracks are located?
+[A] SELECT DISTINCT LOCATION FROM track
+
+[Q] How many races are there?
+[A] SELECT COUNT(*) FROM race
+
+[Q] What are the distinct classes that races can have?
+[A] SELECT DISTINCT CLASS FROM race
+
+[Q] Show name, class, and date for all races.
+[A] SELECT name, CLASS, date FROM race
+
+[Q] Show the race class and number of races in each class.
+[A] SELECT CLASS, COUNT(*) FROM race GROUP BY CLASS
+
+[Q] What is the race class with most number of races.
+[A] SELECT CLASS FROM race GROUP BY CLASS ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] List the race class with at least two races.
+[A] SELECT CLASS FROM race GROUP BY CLASS HAVING COUNT(*) >= 2
+
+[Q] What are the names for tracks without a race in class 'GT'.
+[A] SELECT name FROM track EXCEPT SELECT T2.name FROM race AS T1 JOIN track AS T2 ON T1.track_id = T2.track_id WHERE T1.class = 'GT'
+
+[Q] Show all track names that have had no races.
+[A] SELECT name FROM track WHERE NOT track_id IN (SELECT track_id FROM race)
+
+[Q] Show year where a track with a seating at least 5000 opened and a track with seating no more than 4000 opened.
+[A] SELECT year_opened FROM track WHERE seating BETWEEN 4000 AND 5000
+
+[Q] Show the name of track and the number of races in each track.
+[A] SELECT T2.name, COUNT(*) FROM race AS T1 JOIN track AS T2 ON T1.track_id = T2.track_id GROUP BY T1.track_id
+
+[Q] Show the name of track with most number of races.
+[A] SELECT T2.name FROM race AS T1 JOIN track AS T2 ON T1.track_id = T2.track_id GROUP BY T1.track_id ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Show the name and date for each race and its track name.
+[A] SELECT T1.name, T1.date, T2.name FROM race AS T1 JOIN track AS T2 ON T1.track_id = T2.track_id
+
+[Q] Show the name and location of track with 1 race.
+[A] SELECT T2.name, T2.location FROM race AS T1 JOIN track AS T2 ON T1.track_id = T2.track_id GROUP BY T1.track_id HAVING COUNT(*) = 1
+
+[Q] Find the locations where have both tracks with more than 90000 seats and tracks with less than 70000 seats.
+[A] SELECT LOCATION FROM track WHERE seating > 90000 INTERSECT SELECT LOCATION FROM track WHERE seating < 70000
+
+[Q] How many members have the black membership card?
+[A] SELECT COUNT(*) FROM member WHERE Membership_card = 'Black'
+
+[Q] Find the number of members living in each address.
+[A] SELECT COUNT(*), address FROM member GROUP BY address
+
+[Q] Give me the names of members whose address is in Harford or Waterbury.
+[A] SELECT name FROM member WHERE address = 'Harford' OR address = 'Waterbury'
+
+[Q] Find the ids and names of members who are under age 30 or with black membership card.
+[A] SELECT name, member_id FROM member WHERE Membership_card = 'Black' OR age < 30
+
+[Q] Find the purchase time, age and address of each member, and show the results in the order of purchase time.
+[A] SELECT Time_of_purchase, age, address FROM member ORDER BY Time_of_purchase
+
+[Q] Which membership card has more than 5 members?
+[A] SELECT Membership_card FROM member GROUP BY Membership_card HAVING COUNT(*) > 5
+
+[Q] Which address has both members younger than 30 and members older than 40?
+[A] SELECT address FROM member WHERE age < 30 INTERSECT SELECT address FROM member WHERE age > 40
+
+[Q] What is the membership card held by both members living in Hartford and ones living in Waterbury address?
+[A] SELECT membership_card FROM member WHERE address = 'Hartford' INTERSECT SELECT membership_card FROM member WHERE address = 'Waterbury'
+
+[Q] How many members are not living in Hartford?
+[A] SELECT COUNT(*) FROM member WHERE address <> 'Hartford'
+
+[Q] Which address do not have any member with the black membership card?
+[A] SELECT address FROM member EXCEPT SELECT address FROM member WHERE Membership_card = 'Black'
+
+[Q] Show the shop addresses ordered by their opening year.
+[A] SELECT address FROM shop ORDER BY open_year
+
+[Q] What are the average score and average staff number of all shops?
+[A] SELECT AVG(num_of_staff), AVG(score) FROM shop
+
+[Q] Find the id and address of the shops whose score is below the average score.
+[A] SELECT shop_id, address FROM shop WHERE score < (SELECT AVG(score) FROM shop)
+
+[Q] Find the address and staff number of the shops that do not have any happy hour.
+[A] SELECT address, num_of_staff FROM shop WHERE NOT shop_id IN (SELECT shop_id FROM happy_hour)
+
+[Q] What are the id and address of the shops which have a happy hour in May?
+[A] SELECT t1.address, t1.shop_id FROM shop AS t1 JOIN happy_hour AS t2 ON t1.shop_id = t2.shop_id WHERE MONTH = 'May'
+
+[Q] which shop has happy hour most frequently? List its id and number of happy hours.
+[A] SELECT shop_id, COUNT(*) FROM happy_hour GROUP BY shop_id ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Which month has the most happy hours?
+[A] SELECT MONTH FROM happy_hour GROUP BY MONTH ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Which months have more than 2 happy hours?
+[A] SELECT MONTH FROM happy_hour GROUP BY MONTH HAVING COUNT(*) > 2
+
+[Q] How many albums are there?
+[A] SELECT COUNT(*) FROM ALBUM
+
+[Q] List the names of all music genres.
+[A] SELECT Name FROM GENRE
+
+[Q] Find all the customer information in state NY.
+[A] SELECT * FROM CUSTOMER WHERE State = "NY"
+
+[Q] What are the first names and last names of the employees who live in Calgary city.
+[A] SELECT FirstName, LastName FROM EMPLOYEE WHERE City = "Calgary"
+
+[Q] What are the distinct billing countries of the invoices?
+[A] SELECT DISTINCT (BillingCountry) FROM INVOICE
+
+[Q] Find the names of all artists that have "a" in their names.
+[A] SELECT Name FROM ARTIST WHERE Name LIKE "%a%"
+
+[Q] Find the title of all the albums of the artist "AC/DC".
+[A] SELECT Title FROM ALBUM AS T1 JOIN ARTIST AS T2 ON T1.ArtistId = T2.ArtistId WHERE T2.Name = "AC/DC"
+
+[Q] Hom many albums does the artist "Metallica" have?
+[A] SELECT COUNT(*) FROM ALBUM AS T1 JOIN ARTIST AS T2 ON T1.ArtistId = T2.ArtistId WHERE T2.Name = "Metallica"
+
+[Q] Which artist does the album "Balls to the Wall" belong to?
+[A] SELECT T2.Name FROM ALBUM AS T1 JOIN ARTIST AS T2 ON T1.ArtistId = T2.ArtistId WHERE T1.Title = "Balls to the Wall"
+
+[Q] Which artist has the most albums?
+[A] SELECT T2.Name FROM ALBUM AS T1 JOIN ARTIST AS T2 ON T1.ArtistId = T2.ArtistId GROUP BY T2.Name ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Find the names of all the tracks that contain the word "you".
+[A] SELECT Name FROM TRACK WHERE Name LIKE '%you%'
+
+[Q] What is the average unit price of all the tracks?
+[A] SELECT AVG(UnitPrice) FROM TRACK
+
+[Q] What are the durations of the longest and the shortest tracks in milliseconds?
+[A] SELECT MAX(Milliseconds), MIN(Milliseconds) FROM TRACK
+
+[Q] Show the album names, ids and the number of tracks for each album.
+[A] SELECT T1.Title, T2.AlbumID, COUNT(*) FROM ALBUM AS T1 JOIN TRACK AS T2 ON T1.AlbumId = T2.AlbumId GROUP BY T2.AlbumID
+
+[Q] What is the name of the most common genre in all tracks?
+[A] SELECT T1.Name FROM GENRE AS T1 JOIN TRACK AS T2 ON T1.GenreId = T2.GenreId GROUP BY T2.GenreId ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] What is the least common media type in all tracks?
+[A] SELECT T1.Name FROM MEDIATYPE AS T1 JOIN TRACK AS T2 ON T1.MediaTypeId = T2.MediaTypeId GROUP BY T2.MediaTypeId ORDER BY COUNT(*) LIMIT 1
+
+[Q] Show the album names and ids for albums that contain tracks with unit price bigger than 1.
+[A] SELECT T1.Title, T2.AlbumID FROM ALBUM AS T1 JOIN TRACK AS T2 ON T1.AlbumId = T2.AlbumId WHERE T2.UnitPrice > 1 GROUP BY T2.AlbumID
+
+[Q] How many tracks belong to rock genre?
+[A] SELECT COUNT(*) FROM GENRE AS T1 JOIN TRACK AS T2 ON T1.GenreId = T2.GenreId WHERE T1.Name = "Rock"
+
+[Q] What is the average unit price of tracks that belong to Jazz genre?
+[A] SELECT AVG(UnitPrice) FROM GENRE AS T1 JOIN TRACK AS T2 ON T1.GenreId = T2.GenreId WHERE T1.Name = "Jazz"
+
+[Q] What is the first name and last name of the customer that has email "luisg@embraer.com.br"?
+[A] SELECT FirstName, LastName FROM CUSTOMER WHERE Email = "luisg@embraer.com.br"
+
+[Q] How many customers have email that contains "gmail.com"?
+[A] SELECT COUNT(*) FROM CUSTOMER WHERE Email LIKE "%gmail.com%"
+
+[Q] What is the first name and last name employee helps the customer with first name Leonie?
+[A] SELECT T2.FirstName, T2.LastName FROM CUSTOMER AS T1 JOIN EMPLOYEE AS T2 ON T1.SupportRepId = T2.EmployeeId WHERE T1.FirstName = "Leonie"
+
+[Q] What city does the employee who helps the customer with postal code 70174 live in?
+[A] SELECT T2.City FROM CUSTOMER AS T1 JOIN EMPLOYEE AS T2 ON T1.SupportRepId = T2.EmployeeId WHERE T1.PostalCode = "70174"
+
+[Q] How many distinct cities does the employees live in?
+[A] SELECT COUNT(DISTINCT city) FROM EMPLOYEE
+
+[Q] Find all invoice dates corresponding to customers with first name Astrid and last name Gruber.
+[A] SELECT T2.InvoiceDate FROM CUSTOMER AS T1 JOIN INVOICE AS T2 ON T1.CustomerId = T2.CustomerId WHERE T1.FirstName = "Astrid" AND LastName = "Gruber"
+
+[Q] Find all the customer last names that do not have invoice totals larger than 20.
+[A] SELECT LastName FROM CUSTOMER EXCEPT SELECT T1.LastName FROM CUSTOMER AS T1 JOIN Invoice AS T2 ON T1.CustomerId = T2.CustomerId WHERE T2.total > 20
+
+[Q] Find the first names of all customers that live in Brazil and have an invoice.
+[A] SELECT DISTINCT T1.FirstName FROM CUSTOMER AS T1 JOIN INVOICE AS T2 ON T1.CustomerId = T2.CustomerId WHERE T1.country = "Brazil"
+
+[Q] Find the address of all customers that live in Germany and have invoice.
+[A] SELECT DISTINCT T1.Address FROM CUSTOMER AS T1 JOIN INVOICE AS T2 ON T1.CustomerId = T2.CustomerId WHERE T1.country = "Germany"
+
+[Q] List the phone numbers of all employees.
+[A] SELECT Phone FROM EMPLOYEE
+
+[Q] How many tracks are in the AAC audio file media type?
+[A] SELECT COUNT(*) FROM MEDIATYPE AS T1 JOIN TRACK AS T2 ON T1.MediaTypeId = T2.MediaTypeId WHERE T1.Name = "AAC audio file"
+
+[Q] What is the average duration in milliseconds of tracks that belong to Latin or Pop genre?
+[A] SELECT AVG(Milliseconds) FROM GENRE AS T1 JOIN TRACK AS T2 ON T1.GenreId = T2.GenreId WHERE T1.Name = "Latin" OR T1.Name = "Pop"
+
+[Q] Please show the employee first names and ids of employees who serve at least 10 customers.
+[A] SELECT T1.FirstName, T1.SupportRepId FROM CUSTOMER AS T1 JOIN EMPLOYEE AS T2 ON T1.SupportRepId = T2.EmployeeId GROUP BY T1.SupportRepId HAVING COUNT(*) >= 10
+
+[Q] Please show the employee last names that serves no more than 20 customers.
+[A] SELECT T1.LastName FROM CUSTOMER AS T1 JOIN EMPLOYEE AS T2 ON T1.SupportRepId = T2.EmployeeId GROUP BY T1.SupportRepId HAVING COUNT(*) <= 20
+
+[Q] Please list all album titles in alphabetical order.
+[A] SELECT Title FROM ALBUM ORDER BY Title
+
+[Q] Please list the name and id of all artists that have at least 3 albums in alphabetical order.
+[A] SELECT T2.Name, T1.ArtistId FROM ALBUM AS T1 JOIN ARTIST AS T2 ON T1.ArtistId = T2.ArtistID GROUP BY T1.ArtistId HAVING COUNT(*) >= 3 ORDER BY T2.Name
+
+[Q] Find the names of artists that do not have any albums.
+[A] SELECT Name FROM ARTIST EXCEPT SELECT T2.Name FROM ALBUM AS T1 JOIN ARTIST AS T2 ON T1.ArtistId = T2.ArtistId
+
+[Q] What is the average unit price of rock tracks?
+[A] SELECT AVG(T2.UnitPrice) FROM GENRE AS T1 JOIN TRACK AS T2 ON T1.GenreId = T2.GenreId WHERE T1.Name = "Rock"
+
+[Q] What are the duration of the longest and shortest pop tracks in milliseconds?
+[A] SELECT MAX(Milliseconds), MIN(Milliseconds) FROM GENRE AS T1 JOIN TRACK AS T2 ON T1.GenreId = T2.GenreId WHERE T1.Name = "Pop"
+
+[Q] What are the birth dates of employees living in Edmonton?
+[A] SELECT BirthDate FROM EMPLOYEE WHERE City = "Edmonton"
+
+[Q] What are the distinct unit prices of all tracks?
+[A] SELECT DISTINCT (UnitPrice) FROM TRACK
+
+[Q] How many artists do not have any album?
+[A] SELECT COUNT(*) FROM ARTIST WHERE NOT artistid IN (SELECT artistid FROM ALBUM)
+
+[Q] What are the album titles for albums containing both 'Reggae' and 'Rock' genre tracks?
+[A] SELECT T1.Title FROM Album AS T1 JOIN Track AS T2 ON T1.AlbumId = T2.AlbumId JOIN Genre AS T3 ON T2.GenreID = T3.GenreID WHERE T3.Name = 'Reggae' INTERSECT SELECT T1.Title FROM Album AS T1 JOIN Track AS T2 ON T1.AlbumId = T2.AlbumId JOIN Genre AS T3 ON T2.GenreID = T3.GenreID WHERE T3.Name = 'Rock'
+
+[Q] Find all the phone numbers.
+[A] SELECT customer_phone FROM available_policies
+
+[Q] What are the customer phone numbers under the policy "Life Insurance"?
+[A] SELECT customer_phone FROM available_policies WHERE policy_type_code = "Life Insurance"
+
+[Q] Which policy type has the most records in the database?
+[A] SELECT policy_type_code FROM available_policies GROUP BY policy_type_code ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] What are all the customer phone numbers under the most popular policy type?
+[A] SELECT customer_phone FROM available_policies WHERE policy_type_code = (SELECT policy_type_code FROM available_policies GROUP BY policy_type_code ORDER BY COUNT(*) DESC LIMIT 1)
+
+[Q] Find the policy type used by more than 4 customers.
+[A] SELECT policy_type_code FROM available_policies GROUP BY policy_type_code HAVING COUNT(*) > 4
+
+[Q] Find the total and average amount of settlements.
+[A] SELECT SUM(settlement_amount), AVG(settlement_amount) FROM settlements
+
+[Q] Find the name of services that have been used for more than 2 times in first notification of loss.
+[A] SELECT t2.service_name FROM first_notification_of_loss AS t1 JOIN services AS t2 ON t1.service_id = t2.service_id GROUP BY t1.service_id HAVING COUNT(*) > 2
+
+[Q] What is the effective date of the claim that has the largest amount of total settlement?
+[A] SELECT t1.Effective_Date FROM claims AS t1 JOIN settlements AS t2 ON t1.claim_id = t2.claim_id GROUP BY t1.claim_id ORDER BY SUM(t2.settlement_amount) DESC LIMIT 1
+
+[Q] How many policies are listed for the customer named "Dayana Robel"?
+[A] SELECT COUNT(*) FROM customers AS t1 JOIN customers_policies AS t2 ON t1.customer_id = t2.customer_id WHERE t1.customer_name = "Dayana Robel"
+
+[Q] What is the name of the customer who has the most policies listed?
+[A] SELECT t1.customer_name FROM customers AS t1 JOIN customers_policies AS t2 ON t1.customer_id = t2.customer_id GROUP BY t1.customer_name ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] What are all the policy types of the customer named "Dayana Robel"?
+[A] SELECT DISTINCT t3.policy_type_code FROM customers AS t1 JOIN customers_policies AS t2 ON t1.customer_id = t2.customer_id JOIN available_policies AS t3 ON t2.policy_id = t3.policy_id WHERE t1.customer_name = "Dayana Robel"
+
+[Q] What are all the policy types of the customer that has the most policies listed?
+[A] SELECT DISTINCT t3.policy_type_code FROM customers AS t1 JOIN customers_policies AS t2 ON t1.customer_id = t2.customer_id JOIN available_policies AS t3 ON t2.policy_id = t3.policy_id WHERE t1.customer_name = (SELECT t1.customer_name FROM customers AS t1 JOIN customers_policies AS t2 ON t1.customer_id = t2.customer_id GROUP BY t1.customer_name ORDER BY COUNT(*) DESC LIMIT 1)
+
+[Q] List all the services in the alphabetical order.
+[A] SELECT service_name FROM services ORDER BY service_name
+
+[Q] How many services are there?
+[A] SELECT COUNT(*) FROM services
+
+[Q] Find the names of users who do not have a first notification of loss record.
+[A] SELECT customer_name FROM customers EXCEPT SELECT t1.customer_name FROM customers AS t1 JOIN first_notification_of_loss AS t2 ON t1.customer_id = t2.customer_id
+
+[Q] Find the names of customers who have used either the service "Close a policy" or the service "Upgrade a policy".
+[A] SELECT t1.customer_name FROM customers AS t1 JOIN first_notification_of_loss AS t2 ON t1.customer_id = t2.customer_id JOIN services AS t3 ON t2.service_id = t3.service_id WHERE t3.service_name = "Close a policy" OR t3.service_name = "Upgrade a policy"
+
+[Q] Find the names of customers who have used both the service "Close a policy" and the service "New policy application".
+[A] SELECT t1.customer_name FROM customers AS t1 JOIN first_notification_of_loss AS t2 ON t1.customer_id = t2.customer_id JOIN services AS t3 ON t2.service_id = t3.service_id WHERE t3.service_name = "Close a policy" INTERSECT SELECT t1.customer_name FROM customers AS t1 JOIN first_notification_of_loss AS t2 ON t1.customer_id = t2.customer_id JOIN services AS t3 ON t2.service_id = t3.service_id WHERE t3.service_name = "New policy application"
+
+[Q] Find the IDs of customers whose name contains "Diana".
+[A] SELECT customer_id FROM customers WHERE customer_name LIKE "%Diana%"
+
+[Q] What are the maximum and minimum settlement amount on record?
+[A] SELECT MAX(settlement_amount), MIN(settlement_amount) FROM settlements
+
+[Q] List all the customers in increasing order of IDs.
+[A] SELECT customer_id, customer_name FROM customers ORDER BY customer_id
+
+[Q] Retrieve the open and close dates of all the policies associated with the customer whose name contains "Diana"
+[A] SELECT t2.date_opened, t2.date_closed FROM customers AS t1 JOIN customers_policies AS t2 ON t1.customer_id = t2.customer_id WHERE t1.customer_name LIKE "%Diana%"
+
+[Q] How many kinds of enzymes are there?
+[A] SELECT COUNT(*) FROM enzyme
+
+[Q] List the name of enzymes in descending lexicographical order.
+[A] SELECT name FROM enzyme ORDER BY name DESC
+
+[Q] List the names and the locations that the enzymes can make an effect.
+[A] SELECT name, LOCATION FROM enzyme
+
+[Q] What is the maximum Online Mendelian Inheritance in Man (OMIM) value of the enzymes?
+[A] SELECT MAX(OMIM) FROM enzyme
+
+[Q] What is the product, chromosome and porphyria related to the enzymes which take effect at the location 'Cytosol'?
+[A] SELECT product, chromosome, porphyria FROM enzyme WHERE LOCATION = 'Cytosol'
+
+[Q] What are the names of enzymes who does not produce 'Heme'?
+[A] SELECT name FROM enzyme WHERE product <> 'Heme'
+
+[Q] What are the names and trade names of the medicines which has 'Yes' value in the FDA record?
+[A] SELECT name, trade_name FROM medicine WHERE FDA_approved = 'Yes'
+
+[Q] What are the names of enzymes in the medicine named 'Amisulpride' that can serve as an 'inhibitor'?
+[A] SELECT T1.name FROM enzyme AS T1 JOIN medicine_enzyme_interaction AS T2 ON T1.id = T2.enzyme_id JOIN medicine AS T3 ON T2.medicine_id = T3.id WHERE T3.name = 'Amisulpride' AND T2.interaction_type = 'inhibitor'
+
+[Q] What are the ids and names of the medicine that can interact with two or more enzymes?
+[A] SELECT T1.id, T1.Name FROM medicine AS T1 JOIN medicine_enzyme_interaction AS T2 ON T2.medicine_id = T1.id GROUP BY T1.id HAVING COUNT(*) >= 2
+
+[Q] What are the ids, names and FDA approval status of medicines in descending order of the number of enzymes that it can interact with.
+[A] SELECT T1.id, T1.Name, T1.FDA_approved FROM medicine AS T1 JOIN medicine_enzyme_interaction AS T2 ON T2.medicine_id = T1.id GROUP BY T1.id ORDER BY COUNT(*) DESC
+
+[Q] What is the id and name of the enzyme with most number of medicines that can interact as 'activator'?
+[A] SELECT T1.id, T1.name FROM enzyme AS T1 JOIN medicine_enzyme_interaction AS T2 ON T1.id = T2.enzyme_id WHERE T2.interaction_type = 'activitor' GROUP BY T1.id ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] What is the interaction type of the enzyme named 'ALA synthase' and the medicine named 'Aripiprazole'?
+[A] SELECT T1.interaction_type FROM medicine_enzyme_interaction AS T1 JOIN medicine AS T2 ON T1.medicine_id = T2.id JOIN enzyme AS T3 ON T1.enzyme_id = T3.id WHERE T3.name = 'ALA synthase' AND T2.name = 'Aripiprazole'
+
+[Q] What is the most common interaction type between enzymes and medicine? And how many are there?
+[A] SELECT interaction_type, COUNT(*) FROM medicine_enzyme_interaction GROUP BY interaction_type ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] How many medicines have the FDA approval status 'No' ?
+[A] SELECT COUNT(*) FROM medicine WHERE FDA_approved = 'No'
+
+[Q] How many enzymes do not have any interactions?
+[A] SELECT COUNT(*) FROM enzyme WHERE NOT id IN (SELECT enzyme_id FROM medicine_enzyme_interaction)
+
+[Q] What is the id and trade name of the medicines can interact with at least 3 enzymes?
+[A] SELECT T1.id, T1.trade_name FROM medicine AS T1 JOIN medicine_enzyme_interaction AS T2 ON T2.medicine_id = T1.id GROUP BY T1.id HAVING COUNT(*) >= 3
+
+[Q] What are the distinct name, location and products of the enzymes which has any 'inhibitor' interaction?
+[A] SELECT DISTINCT T1.name, T1.location, T1.product FROM enzyme AS T1 JOIN medicine_enzyme_interaction AS T2 ON T2.enzyme_id = T1.id WHERE T2.interaction_type = 'inhibitor'
+
+[Q] List the medicine name and trade name which can both interact as 'inhibitor' and 'activitor' with enzymes.
+[A] SELECT T1.name, T1.trade_name FROM medicine AS T1 JOIN medicine_enzyme_interaction AS T2 ON T2.medicine_id = T1.id WHERE interaction_type = 'inhibitor' INTERSECT SELECT T1.name, T1.trade_name FROM medicine AS T1 JOIN medicine_enzyme_interaction AS T2 ON T2.medicine_id = T1.id WHERE interaction_type = 'activitor'
+
+[Q] Show the medicine names and trade names that cannot interact with the enzyme with product 'Heme'.
+[A] SELECT name, trade_name FROM medicine EXCEPT SELECT T1.name, T1.trade_name FROM medicine AS T1 JOIN medicine_enzyme_interaction AS T2 ON T2.medicine_id = T1.id JOIN enzyme AS T3 ON T3.id = T2.enzyme_id WHERE T3.product = 'Protoporphyrinogen IX'
+
+[Q] How many distinct FDA approval statuses are there for the medicines?
+[A] SELECT COUNT(DISTINCT FDA_approved) FROM medicine
+
+[Q] Which enzyme names have the substring "ALA"?
+[A] SELECT name FROM enzyme WHERE name LIKE "%ALA%"
+
+[Q] find the number of medicines offered by each trade.
+[A] SELECT trade_name, COUNT(*) FROM medicine GROUP BY trade_name
+
+[Q] List all schools and their nicknames in the order of founded year.
+[A] SELECT school, nickname FROM university ORDER BY founded
+
+[Q] List all public schools and their locations.
+[A] SELECT school, LOCATION FROM university WHERE affiliation = 'Public'
+
+[Q] When was the school with the largest enrollment founded?
+[A] SELECT founded FROM university ORDER BY enrollment DESC LIMIT 1
+
+[Q] Find the founded year of the newest non public school.
+[A] SELECT founded FROM university WHERE affiliation <> 'Public' ORDER BY founded DESC LIMIT 1
+
+[Q] How many schools are in the basketball match?
+[A] SELECT COUNT(DISTINCT school_id) FROM basketball_match
+
+[Q] What is the highest acc percent score in the competition?
+[A] SELECT acc_percent FROM basketball_match ORDER BY acc_percent DESC LIMIT 1
+
+[Q] What is the primary conference of the school that has the lowest acc percent score in the competition?
+[A] SELECT t1.Primary_conference FROM university AS t1 JOIN basketball_match AS t2 ON t1.school_id = t2.school_id ORDER BY t2.acc_percent LIMIT 1
+
+[Q] What is the team name and acc regular season score of the school that was founded for the longest time?
+[A] SELECT t2.team_name, t2.ACC_Regular_Season FROM university AS t1 JOIN basketball_match AS t2 ON t1.school_id = t2.school_id ORDER BY t1.founded LIMIT 1
+
+[Q] Find the location and all games score of the school that has Clemson as its team name.
+[A] SELECT t2.All_Games, t1.location FROM university AS t1 JOIN basketball_match AS t2 ON t1.school_id = t2.school_id WHERE team_name = 'Clemson'
+
+[Q] What are the average enrollment size of the universities that are founded before 1850?
+[A] SELECT AVG(enrollment) FROM university WHERE founded < 1850
+
+[Q] Show the enrollment and primary_conference of the oldest college.
+[A] SELECT enrollment, primary_conference FROM university ORDER BY founded LIMIT 1
+
+[Q] What is the total and minimum enrollment of all schools?
+[A] SELECT SUM(enrollment), MIN(enrollment) FROM university
+
+[Q] Find the total student enrollment for different affiliation type schools.
+[A] SELECT SUM(enrollment), affiliation FROM university GROUP BY affiliation
+
+[Q] How many schools do not participate in the basketball match?
+[A] SELECT COUNT(*) FROM university WHERE NOT school_id IN (SELECT school_id FROM basketball_match)
+
+[Q] Find the schools that were either founded after 1850 or public.
+[A] SELECT school FROM university WHERE founded > 1850 OR affiliation = 'Public'
+
+[Q] Find how many different affiliation types there are.
+[A] SELECT COUNT(DISTINCT affiliation) FROM university
+
+[Q] Find how many school locations have the word 'NY'.
+[A] SELECT COUNT(*) FROM university WHERE LOCATION LIKE "%NY%"
+
+[Q] Find the team names of the universities whose enrollments are smaller than the average enrollment size.
+[A] SELECT t2.team_name FROM university AS t1 JOIN basketball_match AS t2 ON t1.school_id = t2.school_id WHERE enrollment < (SELECT AVG(enrollment) FROM university)
+
+[Q] Find the number of universities that have over a 20000 enrollment size for each affiliation type.
+[A] SELECT COUNT(*), affiliation FROM university WHERE enrollment > 20000 GROUP BY affiliation
+
+[Q] Find the total number of students enrolled in the colleges that were founded after the year of 1850 for each affiliation type.
+[A] SELECT SUM(Enrollment), affiliation FROM university WHERE founded > 1850 GROUP BY affiliation
+
+[Q] What is the maximum enrollment across all schools?
+[A] SELECT MAX(Enrollment) FROM university
+
+[Q] List all information regarding the basketball match.
+[A] SELECT * FROM basketball_match
+
+[Q] List names of all teams in the basketball competition, ordered by all home scores in descending order.
+[A] SELECT team_name FROM basketball_match ORDER BY All_Home DESC
+
+[Q] the names of models that launched between 2002 and 2004.
+[A] SELECT Model_name FROM chip_model WHERE Launch_year BETWEEN 2002 AND 2004
+
+[Q] Which model has the least amount of RAM? List the model name and the amount of RAM.
+[A] SELECT Model_name, RAM_MiB FROM chip_model ORDER BY RAM_MiB LIMIT 1
+
+[Q] What are the chip model and screen mode of the phone with hardware model name "LG-P760"?
+[A] SELECT chip_model, screen_mode FROM phone WHERE Hardware_Model_name = "LG-P760"
+
+[Q] How many phone hardware models are produced by the company named "Nokia Corporation"?
+[A] SELECT COUNT(*) FROM phone WHERE Company_name = "Nokia Corporation"
+
+[Q] What is maximum and minimum RAM size of phone produced by company named "Nokia Corporation"?
+[A] SELECT MAX(T1.RAM_MiB), MIN(T1.RAM_MiB) FROM chip_model AS T1 JOIN phone AS T2 ON T1.Model_name = T2.chip_model WHERE T2.Company_name = "Nokia Corporation"
+
+[Q] What is the average ROM size of phones produced by the company named "Nokia Corporation"?
+[A] SELECT AVG(T1.ROM_MiB) FROM chip_model AS T1 JOIN phone AS T2 ON T1.Model_name = T2.chip_model WHERE T2.Company_name = "Nokia Corporation"
+
+[Q] List the hardware model name and company name for all the phones that were launched in year 2002 or have RAM size greater than 32.
+[A] SELECT T2.Hardware_Model_name, T2.Company_name FROM chip_model AS T1 JOIN phone AS T2 ON T1.Model_name = T2.chip_model WHERE T1.Launch_year = 2002 OR T1.RAM_MiB > 32
+
+[Q] Find all phones that have word 'Full' in their accreditation types. List the Hardware Model name and Company name.
+[A] SELECT Hardware_Model_name, Company_name FROM phone WHERE Accreditation_type LIKE 'Full'
+
+[Q] Find the Char cells, Pixels and Hardware colours for the screen of the phone whose hardware model name is "LG-P760".
+[A] SELECT T1.Char_cells, T1.Pixels, T1.Hardware_colours FROM screen_mode AS T1 JOIN phone AS T2 ON T1.Graphics_mode = T2.screen_mode WHERE T2.Hardware_Model_name = "LG-P760"
+
+[Q] List the hardware model name and company name for the phone whose screen mode type is "Graphics."
+[A] SELECT T2.Hardware_Model_name, T2.Company_name FROM screen_mode AS T1 JOIN phone AS T2 ON T1.Graphics_mode = T2.screen_mode WHERE T1.Type = "Graphics"
+
+[Q] Find the name of the company that has the least number of phone models. List the company name and the number of phone model produced by that company.
+[A] SELECT Company_name, COUNT(*) FROM phone GROUP BY Company_name ORDER BY COUNT(*) LIMIT 1
+
+[Q] List the name of the company that produced more than one phone model.
+[A] SELECT Company_name FROM phone GROUP BY Company_name HAVING COUNT(*) > 1
+
+[Q] List the maximum, minimum and average number of used kb in screen mode.
+[A] SELECT MAX(used_kb), MIN(used_kb), AVG(used_kb) FROM screen_mode
+
+[Q] List the name of the phone model launched in year 2002 and with the highest RAM size.
+[A] SELECT T2.Hardware_Model_name FROM chip_model AS T1 JOIN phone AS T2 ON T1.Model_name = T2.chip_model WHERE T1.Launch_year = 2002 ORDER BY T1.RAM_MiB DESC LIMIT 1
+
+[Q] What are the wifi and screen mode type of the hardware model named "LG-P760"?
+[A] SELECT T1.WiFi, T3.Type FROM chip_model AS T1 JOIN phone AS T2 ON T1.Model_name = T2.chip_model JOIN screen_mode AS T3 ON T2.screen_mode = T3.Graphics_mode WHERE T2.Hardware_Model_name = "LG-P760"
+
+[Q] List the hardware model name for the phones that have screen mode type "Text" or RAM size greater than 32.
+[A] SELECT T2.Hardware_Model_name FROM chip_model AS T1 JOIN phone AS T2 ON T1.Model_name = T2.chip_model JOIN screen_mode AS T3 ON T2.screen_mode = T3.Graphics_mode WHERE T3.Type = "Text" OR T1.RAM_MiB > 32
+
+[Q] List the hardware model name for the phones that were produced by "Nokia Corporation" or whose screen mode type is "Graphics."
+[A] SELECT DISTINCT T2.Hardware_Model_name FROM screen_mode AS T1 JOIN phone AS T2 ON T1.Graphics_mode = T2.screen_mode WHERE T1.Type = "Graphics" OR t2.Company_name = "Nokia Corporation"
+
+[Q] List the hardware model name for the phons that were produced by "Nokia Corporation" but whose screen mode type is not Text.
+[A] SELECT DISTINCT T2.Hardware_Model_name FROM screen_mode AS T1 JOIN phone AS T2 ON T1.Graphics_mode = T2.screen_mode WHERE t2.Company_name = "Nokia Corporation" AND T1.Type <> "Text"
+
+[Q] List the phone hardware model and company name for the phones whose screen usage in kb is between 10 and 15.
+[A] SELECT DISTINCT T2.Hardware_Model_name, T2.Company_name FROM screen_mode AS T1 JOIN phone AS T2 ON T1.Graphics_mode = T2.screen_mode WHERE T1.used_kb BETWEEN 10 AND 15
+
+[Q] Find the number of phones for each accreditation type.
+[A] SELECT Accreditation_type, COUNT(*) FROM phone GROUP BY Accreditation_type
+
+[Q] Find the accreditation level that more than 3 phones use.
+[A] SELECT Accreditation_level FROM phone GROUP BY Accreditation_level HAVING COUNT(*) > 3
+
+[Q] Find the details for all chip models.
+[A] SELECT * FROM chip_model
+
+[Q] How many models do not have the wifi function?
+[A] SELECT COUNT(*) FROM chip_model WHERE wifi = 'No'
+
+[Q] List all the model names sorted by their launch year.
+[A] SELECT model_name FROM chip_model ORDER BY launch_year
+
+[Q] Find the average ram mib size of the chip models that are never used by any phone.
+[A] SELECT AVG(RAM_MiB) FROM chip_model WHERE NOT model_name IN (SELECT chip_model FROM phone)
+
+[Q] Find the names of the chip models that are not used by any phone with full accreditation type.
+[A] SELECT model_name FROM chip_model EXCEPT SELECT chip_model FROM phone WHERE Accreditation_type = 'Full'
+
+[Q] Find the pixels of the screen modes that are used by both phones with full accreditation types and phones with Provisional accreditation types.
+[A] SELECT t1.pixels FROM screen_mode AS t1 JOIN phone AS t2 ON t1.Graphics_mode = t2.screen_mode WHERE t2.Accreditation_type = 'Provisional' INTERSECT SELECT t1.pixels FROM screen_mode AS t1 JOIN phone AS t2 ON t1.Graphics_mode = t2.screen_mode WHERE t2.Accreditation_type = 'Full'
+
+[Q] How many countries are there in total?
+[A] SELECT COUNT(*) FROM country
+
+[Q] Show the country name and capital of all countries.
+[A] SELECT Country_name, Capital FROM country
+
+[Q] Show all official native languages that contain the word "English".
+[A] SELECT Official_native_language FROM country WHERE Official_native_language LIKE "%English%"
+
+[Q] Show all distinct positions of matches.
+[A] SELECT DISTINCT POSITION FROM match_season
+
+[Q] Show the players from college UCLA.
+[A] SELECT Player FROM match_season WHERE College = "UCLA"
+
+[Q] Show the distinct position of players from college UCLA or Duke.
+[A] SELECT DISTINCT POSITION FROM match_season WHERE College = "UCLA" OR College = "Duke"
+
+[Q] Show the draft pick numbers and draft classes of players whose positions are defenders.
+[A] SELECT Draft_Pick_Number, Draft_Class FROM match_season WHERE POSITION = "Defender"
+
+[Q] How many distinct teams are involved in match seasons?
+[A] SELECT COUNT(DISTINCT Team) FROM match_season
+
+[Q] Show the players and the years played.
+[A] SELECT Player, Years_Played FROM player
+
+[Q] Show all team names.
+[A] SELECT Name FROM Team
+
+[Q] Show the season, the player, and the name of the country that player belongs to.
+[A] SELECT T2.Season, T2.Player, T1.Country_name FROM country AS T1 JOIN match_season AS T2 ON T1.Country_id = T2.Country
+
+[Q] Which players are from Indonesia?
+[A] SELECT T2.Player FROM country AS T1 JOIN match_season AS T2 ON T1.Country_id = T2.Country WHERE T1.Country_name = "Indonesia"
+
+[Q] What are the distinct positions of the players from a country whose capital is Dublin?
+[A] SELECT DISTINCT T2.Position FROM country AS T1 JOIN match_season AS T2 ON T1.Country_id = T2.Country WHERE T1.Capital = "Dublin"
+
+[Q] What are the official languages of the countries of players from Maryland or Duke college?
+[A] SELECT T1.Official_native_language FROM country AS T1 JOIN match_season AS T2 ON T1.Country_id = T2.Country WHERE T2.College = "Maryland" OR T2.College = "Duke"
+
+[Q] How many distinct official languages are there among countries of players whose positions are defenders.
+[A] SELECT COUNT(DISTINCT T1.Official_native_language) FROM country AS T1 JOIN match_season AS T2 ON T1.Country_id = T2.Country WHERE T2.Position = "Defender"
+
+[Q] Show the season, the player, and the name of the team that players belong to.
+[A] SELECT T1.Season, T1.Player, T2.Name FROM match_season AS T1 JOIN team AS T2 ON T1.Team = T2.Team_id
+
+[Q] Show the positions of the players from the team with name "Ryley Goldner".
+[A] SELECT T1.Position FROM match_season AS T1 JOIN team AS T2 ON T1.Team = T2.Team_id WHERE T2.Name = "Ryley Goldner"
+
+[Q] How many distinct colleges are associated with players from the team with name "Columbus Crew".
+[A] SELECT COUNT(DISTINCT T1.College) FROM match_season AS T1 JOIN team AS T2 ON T1.Team = T2.Team_id WHERE T2.Name = "Columbus Crew"
+
+[Q] Show the players and years played for players from team "Columbus Crew".
+[A] SELECT T1.Player, T1.Years_Played FROM player AS T1 JOIN team AS T2 ON T1.Team = T2.Team_id WHERE T2.Name = "Columbus Crew"
+
+[Q] Show the position of players and the corresponding number of players.
+[A] SELECT POSITION, COUNT(*) FROM match_season GROUP BY POSITION
+
+[Q] Show the country names and the corresponding number of players.
+[A] SELECT Country_name, COUNT(*) FROM country AS T1 JOIN match_season AS T2 ON T1.Country_id = T2.Country GROUP BY T1.Country_name
+
+[Q] Return all players sorted by college in ascending alphabetical order.
+[A] SELECT player FROM match_season ORDER BY College
+
+[Q] Show the most common position of players in match seasons.
+[A] SELECT POSITION FROM match_season GROUP BY POSITION ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Show the top 3 most common colleges of players in match seasons.
+[A] SELECT College FROM match_season GROUP BY College ORDER BY COUNT(*) DESC LIMIT 3
+
+[Q] Show the name of colleges that have at least two players.
+[A] SELECT College FROM match_season GROUP BY College HAVING COUNT(*) >= 2
+
+[Q] Show the name of colleges that have at least two players in descending alphabetical order.
+[A] SELECT College FROM match_season GROUP BY College HAVING COUNT(*) >= 2 ORDER BY College DESC
+
+[Q] What are the names of teams that do no have match season record?
+[A] SELECT Name FROM team WHERE NOT Team_id IN (SELECT Team FROM match_season)
+
+[Q] What are the names of countries that have both players with position forward and players with position defender?
+[A] SELECT T1.Country_name FROM country AS T1 JOIN match_season AS T2 ON T1.Country_id = T2.Country WHERE T2.Position = "Forward" INTERSECT SELECT T1.Country_name FROM country AS T1 JOIN match_season AS T2 ON T1.Country_id = T2.Country WHERE T2.Position = "Defender"
+
+[Q] Which college have both players with position midfielder and players with position defender?
+[A] SELECT College FROM match_season WHERE POSITION = "Midfielder" INTERSECT SELECT College FROM match_season WHERE POSITION = "Defender"
+
+[Q] How many climbers are there?
+[A] SELECT COUNT(*) FROM climber
+
+[Q] List the names of climbers in descending order of points.
+[A] SELECT Name FROM climber ORDER BY Points DESC
+
+[Q] List the names of climbers whose country is not Switzerland.
+[A] SELECT Name FROM climber WHERE Country <> "Switzerland"
+
+[Q] What is the maximum point for climbers whose country is United Kingdom?
+[A] SELECT MAX(Points) FROM climber WHERE Country = "United Kingdom"
+
+[Q] How many distinct countries are the climbers from?
+[A] SELECT COUNT(DISTINCT Country) FROM climber
+
+[Q] What are the names of mountains in ascending alphabetical order?
+[A] SELECT Name FROM mountain ORDER BY Name
+
+[Q] What are the countries of mountains with height bigger than 5000?
+[A] SELECT Country FROM mountain WHERE Height > 5000
+
+[Q] What is the name of the highest mountain?
+[A] SELECT Name FROM mountain ORDER BY Height DESC LIMIT 1
+
+[Q] List the distinct ranges of the mountains with the top 3 prominence.
+[A] SELECT DISTINCT Range FROM mountain ORDER BY Prominence DESC LIMIT 3
+
+[Q] Show names of climbers and the names of mountains they climb.
+[A] SELECT T1.Name, T2.Name FROM climber AS T1 JOIN mountain AS T2 ON T1.Mountain_ID = T2.Mountain_ID
+
+[Q] Show the names of climbers and the heights of mountains they climb.
+[A] SELECT T1.Name, T2.Height FROM climber AS T1 JOIN mountain AS T2 ON T1.Mountain_ID = T2.Mountain_ID
+
+[Q] Show the height of the mountain climbed by the climber with the maximum points.
+[A] SELECT T2.Height FROM climber AS T1 JOIN mountain AS T2 ON T1.Mountain_ID = T2.Mountain_ID ORDER BY T1.Points DESC LIMIT 1
+
+[Q] Show the distinct names of mountains climbed by climbers from country "West Germany".
+[A] SELECT DISTINCT T2.Name FROM climber AS T1 JOIN mountain AS T2 ON T1.Mountain_ID = T2.Mountain_ID WHERE T1.Country = "West Germany"
+
+[Q] Show the times used by climbers to climb mountains in Country Uganda.
+[A] SELECT T1.Time FROM climber AS T1 JOIN mountain AS T2 ON T1.Mountain_ID = T2.Mountain_ID WHERE T2.Country = "Uganda"
+
+[Q] Please show the countries and the number of climbers from each country.
+[A] SELECT Country, COUNT(*) FROM climber GROUP BY Country
+
+[Q] List the countries that have more than one mountain.
+[A] SELECT Country FROM mountain GROUP BY Country HAVING COUNT(*) > 1
+
+[Q] List the names of mountains that do not have any climber.
+[A] SELECT Name FROM mountain WHERE NOT Mountain_ID IN (SELECT Mountain_ID FROM climber)
+
+[Q] Show the countries that have mountains with height more than 5600 stories and mountains with height less than 5200.
+[A] SELECT Country FROM mountain WHERE Height > 5600 INTERSECT SELECT Country FROM mountain WHERE Height < 5200
+
+[Q] Show the range that has the most number of mountains.
+[A] SELECT Range FROM mountain GROUP BY Range ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Show the names of mountains with height more than 5000 or prominence more than 1000.
+[A] SELECT Name FROM mountain WHERE Height > 5000 OR Prominence > 1000
+
+[Q] How many body builders are there?
+[A] SELECT COUNT(*) FROM body_builder
+
+[Q] List the total scores of body builders in ascending order.
+[A] SELECT Total FROM body_builder ORDER BY Total
+
+[Q] List the snatch score and clean jerk score of body builders in ascending order of snatch score.
+[A] SELECT Snatch, Clean_Jerk FROM body_builder ORDER BY Snatch
+
+[Q] What is the average snatch score of body builders?
+[A] SELECT AVG(Snatch) FROM body_builder
+
+[Q] What are the clean and jerk score of the body builder with the highest total score?
+[A] SELECT Clean_Jerk FROM body_builder ORDER BY Total DESC LIMIT 1
+
+[Q] What are the birthdays of people in ascending order of height?
+[A] SELECT Birth_Date FROM People ORDER BY Height
+
+[Q] What are the names of body builders?
+[A] SELECT T2.Name FROM body_builder AS T1 JOIN people AS T2 ON T1.People_ID = T2.People_ID
+
+[Q] What are the names of body builders whose total score is higher than 300?
+[A] SELECT T2.Name FROM body_builder AS T1 JOIN people AS T2 ON T1.People_ID = T2.People_ID WHERE T1.Total > 300
+
+[Q] What is the name of the body builder with the greatest body weight?
+[A] SELECT T2.Name FROM body_builder AS T1 JOIN people AS T2 ON T1.People_ID = T2.People_ID ORDER BY T2.Weight DESC LIMIT 1
+
+[Q] What are the birth date and birth place of the body builder with the highest total points?
+[A] SELECT T2.Birth_Date, T2.Birth_Place FROM body_builder AS T1 JOIN people AS T2 ON T1.People_ID = T2.People_ID ORDER BY T1.Total DESC LIMIT 1
+
+[Q] What are the heights of body builders with total score smaller than 315?
+[A] SELECT T2.Height FROM body_builder AS T1 JOIN people AS T2 ON T1.People_ID = T2.People_ID WHERE T1.Total < 315
+
+[Q] What is the average total score of body builders with height bigger than 200?
+[A] SELECT AVG(T1.Total) FROM body_builder AS T1 JOIN people AS T2 ON T1.People_ID = T2.People_ID WHERE T2.Height > 200
+
+[Q] What are the names of body builders in descending order of total scores?
+[A] SELECT T2.Name FROM body_builder AS T1 JOIN people AS T2 ON T1.People_ID = T2.People_ID ORDER BY T1.Total DESC
+
+[Q] List each birth place along with the number of people from there.
+[A] SELECT Birth_Place, COUNT(*) FROM people GROUP BY Birth_Place
+
+[Q] What is the most common birth place of people?
+[A] SELECT Birth_Place FROM people GROUP BY Birth_Place ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] What are the birth places that are shared by at least two people?
+[A] SELECT Birth_Place FROM people GROUP BY Birth_Place HAVING COUNT(*) >= 2
+
+[Q] List the height and weight of people in descending order of height.
+[A] SELECT Height, Weight FROM people ORDER BY Height DESC
+
+[Q] Show all information about each body builder.
+[A] SELECT * FROM body_builder
+
+[Q] List the names and origins of people who are not body builders.
+[A] SELECT Name, birth_place FROM people EXCEPT SELECT T1.Name, T1.birth_place FROM people AS T1 JOIN body_builder AS T2 ON T1.people_id = T2.people_id
+
+[Q] How many distinct birth places are there?
+[A] SELECT COUNT(DISTINCT Birth_Place) FROM people
+
+[Q] How many persons are not body builders?
+[A] SELECT COUNT(*) FROM people WHERE NOT people_id IN (SELECT People_ID FROM body_builder)
+
+[Q] List the weight of the body builders who have snatch score higher than 140 or have the height greater than 200.
+[A] SELECT T2.weight FROM body_builder AS T1 JOIN people AS T2 ON T1.people_id = T2.people_id WHERE T1.snatch > 140 OR T2.height > 200
+
+[Q] What are the total scores of the body builders whose birthday contains the string "January" ?
+[A] SELECT T1.total FROM body_builder AS T1 JOIN people AS T2 ON T1.people_id = T2.people_id WHERE T2.Birth_Date LIKE "%January%"
+
+[Q] What is the minimum snatch score?
+[A] SELECT MIN(snatch) FROM body_builder
+
+[Q] How many elections are there?
+[A] SELECT COUNT(*) FROM election
+
+[Q] List the votes of elections in descending order.
+[A] SELECT Votes FROM election ORDER BY Votes DESC
+
+[Q] List the dates and vote percents of elections.
+[A] SELECT Date, Vote_Percent FROM election
+
+[Q] What are the minimum and maximum vote percents of elections?
+[A] SELECT MIN(Vote_Percent), MAX(Vote_Percent) FROM election
+
+[Q] What are the names and parties of representatives?
+[A] SELECT Name, Party FROM representative
+
+[Q] What are the names of representatives whose party is not "Republican"?
+[A] SELECT Name FROM Representative WHERE Party <> "Republican"
+
+[Q] What are the life spans of representatives from New York state or Indiana state?
+[A] SELECT Lifespan FROM representative WHERE State = "New York" OR State = "Indiana"
+
+[Q] What are the names of representatives and the dates of elections they participated in.
+[A] SELECT T2.Name, T1.Date FROM election AS T1 JOIN representative AS T2 ON T1.Representative_ID = T2.Representative_ID
+
+[Q] What are the names of representatives with more than 10000 votes in election?
+[A] SELECT T2.Name FROM election AS T1 JOIN representative AS T2 ON T1.Representative_ID = T2.Representative_ID WHERE Votes > 10000
+
+[Q] What are the names of representatives in descending order of votes?
+[A] SELECT T2.Name FROM election AS T1 JOIN representative AS T2 ON T1.Representative_ID = T2.Representative_ID ORDER BY votes DESC
+
+[Q] What is the party of the representative that has the smallest number of votes.
+[A] SELECT T2.Party FROM election AS T1 JOIN representative AS T2 ON T1.Representative_ID = T2.Representative_ID ORDER BY votes LIMIT 1
+
+[Q] What are the lifespans of representatives in descending order of vote percent?
+[A] SELECT T2.Lifespan FROM election AS T1 JOIN representative AS T2 ON T1.Representative_ID = T2.Representative_ID ORDER BY Vote_Percent DESC
+
+[Q] What is the average number of votes of representatives from party "Republican"?
+[A] SELECT AVG(T1.Votes) FROM election AS T1 JOIN representative AS T2 ON T1.Representative_ID = T2.Representative_ID WHERE T2.Party = "Republican"
+
+[Q] What are the different parties of representative? Show the party name and the number of representatives in each party.
+[A] SELECT Party, COUNT(*) FROM representative GROUP BY Party
+
+[Q] What is the party that has the largest number of representatives?
+[A] SELECT Party, COUNT(*) FROM representative GROUP BY Party ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] What parties have at least three representatives?
+[A] SELECT Party FROM representative GROUP BY Party HAVING COUNT(*) >= 3
+
+[Q] What states have at least two representatives?
+[A] SELECT State FROM representative GROUP BY State HAVING COUNT(*) >= 2
+
+[Q] List the names of representatives that have not participated in elections listed here.
+[A] SELECT Name FROM representative WHERE NOT Representative_ID IN (SELECT Representative_ID FROM election)
+
+[Q] Show the parties that have both representatives in New York state and representatives in Pennsylvania state.
+[A] SELECT Party FROM representative WHERE State = "New York" INTERSECT SELECT Party FROM representative WHERE State = "Pennsylvania"
+
+[Q] How many distinct parties are there for representatives?
+[A] SELECT COUNT(DISTINCT Party) FROM representative
+
+[Q] How many apartment bookings are there in total?
+[A] SELECT COUNT(*) FROM Apartment_Bookings
+
+[Q] Show the start dates and end dates of all the apartment bookings.
+[A] SELECT booking_start_date, booking_end_date FROM Apartment_Bookings
+
+[Q] Show all distinct building descriptions.
+[A] SELECT DISTINCT building_description FROM Apartment_Buildings
+
+[Q] Show the short names of the buildings managed by "Emma".
+[A] SELECT building_short_name FROM Apartment_Buildings WHERE building_manager = "Emma"
+
+[Q] Show the addresses and phones of all the buildings managed by "Brenden".
+[A] SELECT building_address, building_phone FROM Apartment_Buildings WHERE building_manager = "Brenden"
+
+[Q] What are the building full names that contain the word "court"?
+[A] SELECT building_full_name FROM Apartment_Buildings WHERE building_full_name LIKE "%court%"
+
+[Q] What is the minimum and maximum number of bathrooms of all the apartments?
+[A] SELECT MIN(bathroom_count), MAX(bathroom_count) FROM Apartments
+
+[Q] What is the average number of bedrooms of all apartments?
+[A] SELECT AVG(bedroom_count) FROM Apartments
+
+[Q] Return the apartment number and the number of rooms for each apartment.
+[A] SELECT apt_number, room_count FROM Apartments
+
+[Q] What is the average number of rooms of apartments with type code "Studio"?
+[A] SELECT AVG(room_count) FROM Apartments WHERE apt_type_code = "Studio"
+
+[Q] Return the apartment numbers of the apartments with type code "Flat".
+[A] SELECT apt_number FROM Apartments WHERE apt_type_code = "Flat"
+
+[Q] Return the first names and last names of all guests
+[A] SELECT guest_first_name, guest_last_name FROM Guests
+
+[Q] Return the date of birth for all the guests with gender code "Male".
+[A] SELECT date_of_birth FROM Guests WHERE gender_code = "Male"
+
+[Q] Show the apartment numbers, start dates, and end dates of all the apartment bookings.
+[A] SELECT T2.apt_number, T1.booking_start_date, T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id = T2.apt_id
+
+[Q] What are the booking start and end dates of the apartments with type code "Duplex"?
+[A] SELECT T1.booking_start_date, T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id = T2.apt_id WHERE T2.apt_type_code = "Duplex"
+
+[Q] What are the booking start and end dates of the apartments with more than 2 bedrooms?
+[A] SELECT T1.booking_start_date, T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id = T2.apt_id WHERE T2.bedroom_count > 2
+
+[Q] What is the booking status code of the apartment with apartment number "Suite 634"?
+[A] SELECT T1.booking_status_code FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id = T2.apt_id WHERE T2.apt_number = "Suite 634"
+
+[Q] Show the distinct apartment numbers of the apartments that have bookings with status code "Confirmed".
+[A] SELECT DISTINCT T2.apt_number FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id = T2.apt_id WHERE T1.booking_status_code = "Confirmed"
+
+[Q] Show the average room count of the apartments that have booking status code "Provisional".
+[A] SELECT AVG(room_count) FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id = T2.apt_id WHERE T1.booking_status_code = "Provisional"
+
+[Q] Show the guest first names, start dates, and end dates of all the apartment bookings.
+[A] SELECT T2.guest_first_name, T1.booking_start_date, T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Guests AS T2 ON T1.guest_id = T2.guest_id
+
+[Q] Show the start dates and end dates of all the apartment bookings made by guests with gender code "Female".
+[A] SELECT T1.booking_start_date, T1.booking_start_date FROM Apartment_Bookings AS T1 JOIN Guests AS T2 ON T1.guest_id = T2.guest_id WHERE T2.gender_code = "Female"
+
+[Q] Show the first names and last names of all the guests that have apartment bookings with status code "Confirmed".
+[A] SELECT T2.guest_first_name, T2.guest_last_name FROM Apartment_Bookings AS T1 JOIN Guests AS T2 ON T1.guest_id = T2.guest_id WHERE T1.booking_status_code = "Confirmed"
+
+[Q] Show the facility codes of apartments with more than 4 bedrooms.
+[A] SELECT T1.facility_code FROM Apartment_Facilities AS T1 JOIN Apartments AS T2 ON T1.apt_id = T2.apt_id WHERE T2.bedroom_count > 4
+
+[Q] Show the total number of rooms of all apartments with facility code "Gym".
+[A] SELECT SUM(T2.room_count) FROM Apartment_Facilities AS T1 JOIN Apartments AS T2 ON T1.apt_id = T2.apt_id WHERE T1.facility_code = "Gym"
+
+[Q] Show the total number of rooms of the apartments in the building with short name "Columbus Square".
+[A] SELECT SUM(T2.room_count) FROM Apartment_Buildings AS T1 JOIN Apartments AS T2 ON T1.building_id = T2.building_id WHERE T1.building_short_name = "Columbus Square"
+
+[Q] Show the addresses of the buildings that have apartments with more than 2 bathrooms.
+[A] SELECT T1.building_address FROM Apartment_Buildings AS T1 JOIN Apartments AS T2 ON T1.building_id = T2.building_id WHERE T2.bathroom_count > 2
+
+[Q] Show the apartment type codes and apartment numbers in the buildings managed by "Kyle".
+[A] SELECT T2.apt_type_code, T2.apt_number FROM Apartment_Buildings AS T1 JOIN Apartments AS T2 ON T1.building_id = T2.building_id WHERE T1.building_manager = "Kyle"
+
+[Q] Show the booking status code and the corresponding number of bookings.
+[A] SELECT booking_status_code, COUNT(*) FROM Apartment_Bookings GROUP BY booking_status_code
+
+[Q] Return all the apartment numbers sorted by the room count in ascending order.
+[A] SELECT apt_number FROM Apartments ORDER BY room_count
+
+[Q] Return the apartment number with the largest number of bedrooms.
+[A] SELECT apt_number FROM Apartments ORDER BY bedroom_count DESC LIMIT 1
+
+[Q] Show the apartment type codes and the corresponding number of apartments sorted by the number of apartments in ascending order.
+[A] SELECT apt_type_code, COUNT(*) FROM Apartments GROUP BY apt_type_code ORDER BY COUNT(*)
+
+[Q] Show the top 3 apartment type codes sorted by the average number of rooms in descending order.
+[A] SELECT apt_type_code FROM Apartments GROUP BY apt_type_code ORDER BY AVG(room_count) DESC LIMIT 3
+
+[Q] Show the apartment type code that has the largest number of total rooms, together with the number of bathrooms and number of bedrooms.
+[A] SELECT apt_type_code, bathroom_count, bedroom_count FROM Apartments GROUP BY apt_type_code ORDER BY SUM(room_count) DESC LIMIT 1
+
+[Q] Show the most common apartment type code.
+[A] SELECT apt_type_code FROM Apartments GROUP BY apt_type_code ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Show the most common apartment type code among apartments with more than 1 bathroom.
+[A] SELECT apt_type_code FROM Apartments WHERE bathroom_count > 1 GROUP BY apt_type_code ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Show each apartment type code, and the maximum and minimum number of rooms for each type.
+[A] SELECT apt_type_code, MAX(room_count), MIN(room_count) FROM Apartments GROUP BY apt_type_code
+
+[Q] Show each gender code and the corresponding count of guests sorted by the count in descending order.
+[A] SELECT gender_code, COUNT(*) FROM Guests GROUP BY gender_code ORDER BY COUNT(*) DESC
+
+[Q] How many apartments do not have any facility?
+[A] SELECT COUNT(*) FROM Apartments WHERE NOT apt_id IN (SELECT apt_id FROM Apartment_Facilities)
+
+[Q] Show the apartment numbers of apartments with bookings that have status code both "Provisional" and "Confirmed"
+[A] SELECT T2.apt_number FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id = T2.apt_id WHERE T1.booking_status_code = "Confirmed" INTERSECT SELECT T2.apt_number FROM Apartment_Bookings AS T1 JOIN Apartments AS T2 ON T1.apt_id = T2.apt_id WHERE T1.booking_status_code = "Provisional"
+
+[Q] Show the apartment numbers of apartments with unit status availability of both 0 and 1.
+[A] SELECT T1.apt_number FROM Apartments AS T1 JOIN View_Unit_Status AS T2 ON T1.apt_id = T2.apt_id WHERE T2.available_yn = 0 INTERSECT SELECT T1.apt_number FROM Apartments AS T1 JOIN View_Unit_Status AS T2 ON T1.apt_id = T2.apt_id WHERE T2.available_yn = 1
+
+[Q] How many games are held after season 2007?
+[A] SELECT COUNT(*) FROM game WHERE season > 2007
+
+[Q] List the dates of games by the home team name in descending order.
+[A] SELECT Date FROM game ORDER BY home_team DESC
+
+[Q] List the season, home team, away team of all the games.
+[A] SELECT season, home_team, away_team FROM game
+
+[Q] What are the maximum, minimum and average home games each stadium held?
+[A] SELECT MAX(home_games), MIN(home_games), AVG(home_games) FROM stadium
+
+[Q] What is the average attendance of stadiums with capacity percentage higher than 100%?
+[A] SELECT average_attendance FROM stadium WHERE capacity_percentage > 100
+
+[Q] What are the player name, number of matches, and information source for players who do not suffer from injury of 'Knee problem'?
+[A] SELECT player, number_of_matches, SOURCE FROM injury_accident WHERE injury <> 'Knee problem'
+
+[Q] What is the season of the game which causes the player 'Walter Samuel' to get injured?
+[A] SELECT T1.season FROM game AS T1 JOIN injury_accident AS T2 ON T1.id = T2.game_id WHERE T2.player = 'Walter Samuel'
+
+[Q] What are the ids, scores, and dates of the games which caused at least two injury accidents?
+[A] SELECT T1.id, T1.score, T1.date FROM game AS T1 JOIN injury_accident AS T2 ON T2.game_id = T1.id GROUP BY T1.id HAVING COUNT(*) >= 2
+
+[Q] What are the id and name of the stadium where the most injury accidents happened?
+[A] SELECT T1.id, T1.name FROM stadium AS T1 JOIN game AS T2 ON T1.id = T2.stadium_id JOIN injury_accident AS T3 ON T2.id = T3.game_id GROUP BY T1.id ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] In which season and which stadium did any player have an injury of 'Foot injury' or 'Knee problem'?
+[A] SELECT T1.season, T2.name FROM game AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.id JOIN injury_accident AS T3 ON T1.id = T3.game_id WHERE T3.injury = 'Foot injury' OR T3.injury = 'Knee problem'
+
+[Q] How many different kinds of information sources are there for injury accidents?
+[A] SELECT COUNT(DISTINCT SOURCE) FROM injury_accident
+
+[Q] How many games are free of injury accidents?
+[A] SELECT COUNT(*) FROM game WHERE NOT id IN (SELECT game_id FROM injury_accident)
+
+[Q] How many distinct kinds of injuries happened after season 2010?
+[A] SELECT COUNT(DISTINCT T1.injury) FROM injury_accident AS T1 JOIN game AS T2 ON T1.game_id = T2.id WHERE T2.season > 2010
+
+[Q] List the name of the stadium where both the player 'Walter Samuel' and the player 'Thiago Motta' got injured.
+[A] SELECT T2.name FROM game AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.id JOIN injury_accident AS T3 ON T1.id = T3.game_id WHERE T3.player = 'Walter Samuel' INTERSECT SELECT T2.name FROM game AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.id JOIN injury_accident AS T3 ON T1.id = T3.game_id WHERE T3.player = 'Thiago Motta'
+
+[Q] Show the name, average attendance, total attendance for stadiums where no accidents happened.
+[A] SELECT name, average_attendance, total_attendance FROM stadium EXCEPT SELECT T2.name, T2.average_attendance, T2.total_attendance FROM game AS T1 JOIN stadium AS T2 ON T1.stadium_id = T2.id JOIN injury_accident AS T3 ON T1.id = T3.game_id
+
+[Q] Which stadium name contains the substring "Bank"?
+[A] SELECT name FROM stadium WHERE name LIKE "%Bank%"
+
+[Q] How many games has each stadium held?
+[A] SELECT T1.id, COUNT(*) FROM stadium AS T1 JOIN game AS T2 ON T1.id = T2.stadium_id GROUP BY T1.id
+
+[Q] For each injury accident, find the date of the game and the name of the injured player in the game, and sort the results in descending order of game season.
+[A] SELECT T1.date, T2.player FROM game AS T1 JOIN injury_accident AS T2 ON T1.id = T2.game_id ORDER BY T1.season DESC
+
+[Q] List all country and league names.
+[A] SELECT T1.name, T2.name FROM Country AS T1 JOIN League AS T2 ON T1.id = T2.country_id
+
+[Q] How many leagues are there in England?
+[A] SELECT COUNT(*) FROM Country AS T1 JOIN League AS T2 ON T1.id = T2.country_id WHERE T1.name = "England"
+
+[Q] What is the average weight of all players?
+[A] SELECT AVG(weight) FROM Player
+
+[Q] What is the maximum and minimum height of all players?
+[A] SELECT MAX(weight), MIN(weight) FROM Player
+
+[Q] List all player names who have an overall rating higher than the average.
+[A] SELECT DISTINCT T1.player_name FROM Player AS T1 JOIN Player_Attributes AS T2 ON T1.player_api_id = T2.player_api_id WHERE T2.overall_rating > (SELECT AVG(overall_rating) FROM Player_Attributes)
+
+[Q] What are the names of players who have the best dribbling?
+[A] SELECT DISTINCT T1.player_name FROM Player AS T1 JOIN Player_Attributes AS T2 ON T1.player_api_id = T2.player_api_id WHERE T2.dribbling = (SELECT MAX(overall_rating) FROM Player_Attributes)
+
+[Q] List the names of all players who have a crossing score higher than 90 and prefer their right foot.
+[A] SELECT DISTINCT T1.player_name FROM Player AS T1 JOIN Player_Attributes AS T2 ON T1.player_api_id = T2.player_api_id WHERE T2.crossing > 90 AND T2.preferred_foot = "right"
+
+[Q] List the names of all left-footed players who have overall rating between 85 and 90.
+[A] SELECT DISTINCT T1.player_name FROM Player AS T1 JOIN Player_Attributes AS T2 ON T1.player_api_id = T2.player_api_id WHERE T2.preferred_foot = "left" AND T2.overall_rating >= 85 AND T2.overall_rating <= 90
+
+[Q] What is the average rating for right-footed players and left-footed players?
+[A] SELECT preferred_foot, AVG(overall_rating) FROM Player_Attributes GROUP BY preferred_foot
+
+[Q] Of all players with an overall rating greater than 80, how many are right-footed and left-footed?
+[A] SELECT preferred_foot, COUNT(*) FROM Player_Attributes WHERE overall_rating > 80 GROUP BY preferred_foot
+
+[Q] List all of the player ids with a height of at least 180cm and an overall rating higher than 85.
+[A] SELECT player_api_id FROM Player WHERE height >= 180 INTERSECT SELECT player_api_id FROM Player_Attributes WHERE overall_rating > 85
+
+[Q] List all of the ids for left-footed players with a height between 180cm and 190cm.
+[A] SELECT player_api_id FROM Player WHERE height >= 180 AND height <= 190 INTERSECT SELECT player_api_id FROM Player_Attributes WHERE preferred_foot = "left"
+
+[Q] Who are the top 3 players in terms of overall rating?
+[A] SELECT DISTINCT T1.player_name FROM Player AS T1 JOIN Player_Attributes AS T2 ON T1.player_api_id = T2.player_api_id ORDER BY overall_rating DESC LIMIT 3
+
+[Q] List the names and birthdays of the top five players in terms of potential.
+[A] SELECT DISTINCT T1.player_name, T1.birthday FROM Player AS T1 JOIN Player_Attributes AS T2 ON T1.player_api_id = T2.player_api_id ORDER BY potential DESC LIMIT 5
+
+[Q] How many performances are there?
+[A] SELECT COUNT(*) FROM performance
+
+[Q] List the hosts of performances in ascending order of attendance.
+[A] SELECT HOST FROM performance ORDER BY Attendance
+
+[Q] What are the dates and locations of performances?
+[A] SELECT Date, LOCATION FROM performance
+
+[Q] Show the attendances of the performances at location "TD Garden" or "Bell Centre"
+[A] SELECT Attendance FROM performance WHERE LOCATION = "TD Garden" OR LOCATION = "Bell Centre"
+
+[Q] What is the average number of attendees for performances?
+[A] SELECT AVG(Attendance) FROM performance
+
+[Q] What is the date of the performance with the highest number of attendees?
+[A] SELECT Date FROM performance ORDER BY Attendance DESC LIMIT 1
+
+[Q] Show different locations and the number of performances at each location.
+[A] SELECT LOCATION, COUNT(*) FROM performance GROUP BY LOCATION
+
+[Q] Show the most common location of performances.
+[A] SELECT LOCATION FROM performance GROUP BY LOCATION ORDER BY COUNT(*) DESC LIMIT 1
+
+[Q] Show the locations that have at least two performances.
+[A] SELECT LOCATION FROM performance GROUP BY LOCATION HAVING COUNT(*) >= 2
+
+[Q] Show the locations that have both performances with more than 2000 attendees and performances with less than 1000 attendees.
+[A] SELECT LOCATION FROM performance WHERE Attendance > 2000 INTERSECT SELECT LOCATION FROM performance WHERE Attendance < 1000
+
+[Q] Show the names of members and the location of the performances they attended.
+[A] SELECT T2.Name, T3.Location FROM member_attendance AS T1 JOIN member AS T2 ON T1.Member_ID = T2.Member_ID JOIN performance AS T3 ON T1.Performance_ID = T3.Performance_ID
+
+[Q] Show the names of members and the location of performances they attended in ascending alphabetical order of their names.
+[A] SELECT T2.Name, T3.Location FROM member_attendance AS T1 JOIN member AS T2 ON T1.Member_ID = T2.Member_ID JOIN performance AS T3 ON T1.Performance_ID = T3.Performance_ID ORDER BY T2.Name
+
+[Q] Show the dates of performances with attending members whose roles are "Violin".
+[A] SELECT T3.Date FROM member_attendance AS T1 JOIN member AS T2 ON T1.Member_ID = T2.Member_ID JOIN performance AS T3 ON T1.Performance_ID = T3.Performance_ID WHERE T2.Role = "Violin"
+
+[Q] Show the names of members and the dates of performances they attended in descending order of attendance of the performances.
+[A] SELECT T2.Name, T3.Date FROM member_attendance AS T1 JOIN member AS T2 ON T1.Member_ID = T2.Member_ID JOIN performance AS T3 ON T1.Performance_ID = T3.Performance_ID ORDER BY T3.Attendance DESC
+
+[Q] List the names of members who did not attend any performance.
+[A] SELECT Name FROM member WHERE NOT Member_ID IN (SELECT Member_ID FROM member_attendance)
+
+[Q] Find the buildings which have rooms with capacity more than 50.
+[A] SELECT DISTINCT building FROM classroom WHERE capacity > 50
+
+[Q] Count the number of rooms that are not in the Lamberton building.
+[A] SELECT COUNT(*) FROM classroom WHERE building <> 'Lamberton'
+
+[Q] What is the name and building of the departments whose budget is more than the average budget?
+[A] SELECT dept_name, building FROM department WHERE budget > (SELECT AVG(budget) FROM department)
+
+[Q] Find the room number of the rooms which can sit 50 to 100 students and their buildings.
+[A] SELECT building, room_number FROM classroom WHERE capacity BETWEEN 50 AND 100
+
+[Q] Find the name and building of the department with the highest budget.
+[A] SELECT dept_name, building FROM department ORDER BY budget DESC LIMIT 1
+
+[Q] What is the name of the student who has the highest total credits in the History department.
+[A] SELECT name FROM student WHERE dept_name = 'History' ORDER BY tot_cred DESC LIMIT 1
+
+[Q] How many rooms does the Lamberton building have?
+[A] SELECT COUNT(*) FROM classroom WHERE building = 'Lamberton'
+
+[Q] How many students have advisors?
+[A] SELECT COUNT(DISTINCT s_id) FROM advisor
+
+[Q] How many departments offer courses?
+[A] SELECT COUNT(DISTINCT dept_name) FROM course
+
+[Q] How many different courses offered by Physics department?
+[A] SELECT COUNT(DISTINCT course_id) FROM course WHERE dept_name = 'Physics'
+
+[Q] Find the title of courses that have two prerequisites?
+[A] SELECT T1.title FROM course AS T1 JOIN prereq AS T2 ON T1.course_id = T2.course_id GROUP BY T2.course_id HAVING COUNT(*) = 2
+
+[Q] Find the title, credit, and department name of courses that have more than one prerequisites?
+[A] SELECT T1.title, T1.credits, T1.dept_name FROM course AS T1 JOIN prereq AS T2 ON T1.course_id = T2.course_id GROUP BY T2.course_id HAVING COUNT(*) > 1
+
+[Q] How many courses that do not have prerequisite?
+[A] SELECT COUNT(*) FROM course WHERE NOT course_id IN (SELECT course_id FROM prereq)
+
+[Q] Find the name of the courses that do not have any prerequisite?
+[A] SELECT title FROM course WHERE NOT course_id IN (SELECT course_id FROM prereq)
+
+[Q] How many different instructors have taught some course?
+[A] SELECT COUNT(DISTINCT id) FROM teaches
+
+[Q] Find the total budgets of the Marketing or Finance department.
+[A] SELECT SUM(budget) FROM department WHERE dept_name = 'Marketing' OR dept_name = 'Finance'
+
+[Q] Find the department name of the instructor whose name contains 'Soisalon'.
+[A] SELECT dept_name FROM instructor WHERE name LIKE '%Soisalon%'
+
+[Q] How many rooms whose capacity is less than 50 does the Lamberton building have?
+[A] SELECT COUNT(*) FROM classroom WHERE building = 'Lamberton' AND capacity < 50
+
+[Q] Find the name and budget of departments whose budgets are more than the average budget.
+[A] SELECT dept_name, budget FROM department WHERE budget > (SELECT AVG(budget) FROM department)
+
